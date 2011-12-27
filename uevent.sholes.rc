@@ -1,0 +1,23 @@
+
+/dev/DspBridge  0666	root	root
+/dev/pvrsrvkm	0666 	system	graphics
+/dev/lis331dlh	0777	compass	compass 
+/dev/akm8973	0777	compass	compass
+/dev/sfh7743	0777	compass	compass
+/dev/akm8973_dev	0660	compass	compass
+/dev/akm8973_aot	0660	compass	compass
+/dev/ttyUSB0	0640	radio	radio
+/dev/ttyS0	0640	radio	radio
+/dev/ts0710mux0	0640	radio	radio
+/dev/ts0710mux1	0640	radio	radio
+/dev/ts0710mux2	0640	radio	radio
+/dev/ts0710mux3	0640	radio	radio
+/dev/ts0710mux4	0640	radio	radio
+/dev/ts0710mux5	0640	radio	radio
+/dev/ts0710mux6	0640	radio	radio
+/dev/ts0710mux7	0640	radio	radio
+/dev/ts0710mux8	0640	radio	radio
+/dev/ts0710mux9	0640	radio	radio
+/dev/ttyS1	0660	bluetooth	bluetooth
+
+
