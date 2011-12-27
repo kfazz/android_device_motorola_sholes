@@ -1,4 +1,4 @@
-ifeq ($(TARGET_BOOTLOADER_BOARD_NAME),sholes)
+ifeq ($(TARGET_BOOTLOADER_BOARD_NAME),_not_sholes)
 
 LOCAL_PATH:= $(call my-dir)
 

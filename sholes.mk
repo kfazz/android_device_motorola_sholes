@@ -26,7 +26,7 @@ $(call inherit-product, device/common/gps/gps_us_supl.mk)
 
 PRODUCT_COPY_FILES += \
     device/motorola/sholes/init.sholes.rc:root/init.sholes.rc \
-    device/motorola/sholes/uevent.sholes.rc:root/uevent.sholes.rc
+    device/motorola/sholes/ueventd.sholes.rc:root/ueventd.sholes.rc
 
 #    device/motorola/sholes/init.rc:root/init.rc \
 
