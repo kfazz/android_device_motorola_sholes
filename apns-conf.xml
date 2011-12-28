@@ -526,7 +526,19 @@
   <apn carrier="Rogers #2" mcc="302" mnc="720" apn="rogers-core-appl1.apn" type="default,supl,mms" />
   <apn carrier="Rogers #1" mcc="302" mnc="72" apn="internet.com" password="wap" type="default,supl,mms" />
   <apn carrier="Rogers MMS" mcc="302" mnc="72" apn="rogers-core-appl1.apn" mmsc="http://mms.gprs.rogers.com" mmsproxy="10.128.1.69" mmsport="80" type="mms" />
-  <apn carrier="Verizon" mcc="310" mnc="004" apn="internet" user="*" password="*" server="*" mmsc="http://mms.vtext.com/servlets/mms" type="default,supl,mms" />
+  <!-- BEGIN Motorola, a13803, 07/10/2010, IKHALFMWK-87: Modify Apn database for VZW LTE support -->
+  <!-- BEGIN Motorola, btm478, 12/02/2010, IKHALFMWK-117:Change Inactivity Timer to 24 hrs  -->
+  <apn carrier="Verizon Internet" mcc="310" mnc="004" apn="VZWINTERNET" user="*" password="*" server="*" mmsc="http://mms.vtext.com/servlets/mms" type="default,supl,mms,dun" inactivetimer="1440" enabled="true" iptype="IPv6v4" class="3" />
+  <apn carrier="Verizon FOTA" mcc="310" mnc="004" apn="VZWADMIN" user="*" password="*" server="*" type="fota" inactivetimer="1440" enabled="true" iptype="IPv6v4" class="2" />
+  <apn carrier="Verizon IMS" mcc="310" mnc="004" apn="VZWIMS" user="*" password="*" server="*" type="ims" inactivetimer="1440" enabled="true" iptype="IPv6v4" class="1" />
+  <apn carrier="Verizon CBS" mcc="310" mnc="004" apn="VZWAPP" user="*" password="*" server="*" mmsc="http://mms.vtext.com/servlets/mms" type="cbs,hipri" inactivetimer="1440" enabled="true" iptype="IPv6v4" class="4" />
+  <!-- END IKHALFMWK-87 -->
+  <!-- BEGING Moto, w0126c, 5/3/2011, IKSTABLEFIVE-7192, Add APN entries for VZW LTE mcc and mnc -->
+  <apn carrier="Verizon Internet" mcc="311" mnc="480" apn="VZWINTERNET" user="*" password="*" server="*" mmsc="http://mms.vtext.com/servlets/mms" type="default,supl,mms,dun" inactivetimer="1440" enabled="true" iptype="IPv6v4" class="3" />
+  <apn carrier="Verizon FOTA" mcc="311" mnc="480" apn="VZWADMIN" user="*" password="*" server="*" type="fota" inactivetimer="1440" enabled="true" iptype="IPv6v4" class="2" />
+  <apn carrier="Verizon IMS" mcc="311" mnc="480" apn="VZWIMS" user="*" password="*" server="*" type="ims" inactivetimer="1440" enabled="true" iptype="IPv6v4" class="1" />
+  <apn carrier="Verizon CBS" mcc="311" mnc="480" apn="VZWAPP" user="*" password="*" server="*" mmsc="http://mms.vtext.com/servlets/mms" type="cbs,hipri" inactivetimer="1440" enabled="true" iptype="IPv6v4" class="4" />
+  <!-- END Moto, IKSTABLEFIVE-7192 -->
   <apn carrier="Cellular South" mcc="310" mnc="023" apn="internet" mmsc="http://pix.cellularsouth.com/servlets/mms" authtype="3" port="" mmsport="" type="mms" />
   <apn carrier="metropcs" mcc="310" mnc="027" apn="wap.metropcs.net" user="MDN@mymetropcs.com" password="metropcs" server="http://mms.metropcs.net/servlets/mmsc" mmsc="http://mms.metropcs.net/mmsc" mmsport="3128" type="default,supl,mms" />
   <apn carrier="myBlue Pix" mcc="310" mnc="030" apn="mmswap.centennialwireless.com" mmsc="http://mms.myblue.com/servlets/mms" mmsproxy="63.99.231.135" mmsport="8080" type="mms" />

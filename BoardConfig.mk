@@ -56,7 +56,7 @@ TARGET_PROVIDES_INIT_TARGET_RC := true
 TARGET_PROVIDES_INIT_RC := false
 
 # audio stuff
-TARGET_PROVIDES_LIBAUDIO := true
+TARGET_PROVIDES_LIBAUDIO := false
 BOARD_USES_GENERIC_AUDIO := true
 BOARD_USES_ALSA_AUDIO := true #we have /dev/snd/mixer, is it alsa? testing...
 BUILD_WITH_ALSA_UTILS := true

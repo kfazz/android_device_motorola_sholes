@@ -121,24 +121,24 @@ typedef void (*AlsaControlSet)(uint32_t devices, int mode);
 #define DEVICE_OUT_FM_SPEAKER 0x1000
 
 #define OMAP3_OUT_SCO      (\
-        android_audio_legacy::AudioSystem::DEVICE_OUT_BLUETOOTH_SCO |\
-        android_audio_legacy::AudioSystem::DEVICE_OUT_BLUETOOTH_SCO_HEADSET |\
-        android_audio_legacy::AudioSystem::DEVICE_OUT_BLUETOOTH_SCO_CARKIT)
+        AudioSystem::DEVICE_OUT_BLUETOOTH_SCO |\
+        AudioSystem::DEVICE_OUT_BLUETOOTH_SCO_HEADSET |\
+        AudioSystem::DEVICE_OUT_BLUETOOTH_SCO_CARKIT)
 
 #define OMAP3_OUT_FM        (\
         DEVICE_OUT_FM_HEADPHONE |\
         DEVICE_OUT_FM_SPEAKER)
 
 #define OMAP3_OUT_DEFAULT   (\
-        android_audio_legacy::AudioSystem::DEVICE_OUT_ALL &\
+        AudioSystem::DEVICE_OUT_ALL &\
         ~OMAP3_OUT_SCO &\
         ~OMAP3_OUT_FM)
 
 #define OMAP3_IN_SCO        (\
-        android_audio_legacy::AudioSystem::DEVICE_IN_BLUETOOTH_SCO_HEADSET)
+        AudioSystem::DEVICE_IN_BLUETOOTH_SCO_HEADSET)
 
 #define OMAP3_IN_DEFAULT    (\
-        android_audio_legacy::AudioSystem::DEVICE_IN_ALL &\
+        AudioSystem::DEVICE_IN_ALL &\
         ~OMAP3_IN_SCO)
 
 static alsa_handle_t _defaults[] = {
@@ -149,7 +149,7 @@ static alsa_handle_t _defaults[] = {
         curMode     : 0,
         curChannels : 0,
         handle      : 0,
-        format      : SND_PCM_FORMAT_S16_LE, // android_audio_legacy::AudioSystem::PCM_16_BIT
+        format      : SND_PCM_FORMAT_S16_LE, // AudioSystem::PCM_16_BIT
         channels    : 2,
         sampleRate  : DEFAULT_SAMPLE_RATE,
         latency     : 200000, // Desired Delay in usec
@@ -164,7 +164,7 @@ static alsa_handle_t _defaults[] = {
         curMode     : 0,
         curChannels : 0,
         handle      : 0,
-        format      : SND_PCM_FORMAT_S16_LE, // android_audio_legacy::AudioSystem::PCM_16_BIT
+        format      : SND_PCM_FORMAT_S16_LE, // AudioSystem::PCM_16_BIT
         channels    : 2,
         sampleRate  : DEFAULT_SAMPLE_RATE,
         latency     : 200000, // Desired Delay in usec
@@ -179,7 +179,7 @@ static alsa_handle_t _defaults[] = {
         curMode     : 0,
         curChannels : 0,
         handle      : 0,
-        format      : SND_PCM_FORMAT_S16_LE, // android_audio_legacy::AudioSystem::PCM_16_BIT
+        format      : SND_PCM_FORMAT_S16_LE, // AudioSystem::PCM_16_BIT
         channels    : 2,
         sampleRate  : DEFAULT_SAMPLE_RATE,
         latency     : 90702, // Desired Delay in usec, (1E9/44100) * 4
@@ -194,7 +194,7 @@ static alsa_handle_t _defaults[] = {
         curMode     : 0,
         curChannels : 0,
         handle      : 0,
-        format      : SND_PCM_FORMAT_S16_LE, // android_audio_legacy::AudioSystem::PCM_16_BIT
+        format      : SND_PCM_FORMAT_S16_LE, // AudioSystem::PCM_16_BIT
         channels    : 1,
         sampleRate  : AudioRecord::DEFAULT_SAMPLE_RATE,
         latency     : 250000, // Desired Delay in usec
@@ -209,7 +209,7 @@ static alsa_handle_t _defaults[] = {
         curMode     : 0,
         curChannels : 0,
         handle      : 0,
-        format      : SND_PCM_FORMAT_S16_LE, // android_audio_legacy::AudioSystem::PCM_16_BIT
+        format      : SND_PCM_FORMAT_S16_LE, // AudioSystem::PCM_16_BIT
         channels    : 1,
         sampleRate  : /*AudioRecord::*/DEFAULT_SAMPLE_RATE,
         latency     : 250000, // Desired Delay in usec
@@ -230,8 +230,8 @@ const char *deviceName(alsa_handle_t *handle, uint32_t device, int mode)
         return FM_TRANSMIT_DEVICE;
 
     /* Let's see if this is external device match attempt first */
-    if (device & android_audio_legacy::AudioSystem::DEVICE_OUT_WIRED_HEADSET ||
-	device & android_audio_legacy::AudioSystem::DEVICE_IN_WIRED_HEADSET)
+    if (device & AudioSystem::DEVICE_OUT_WIRED_HEADSET ||
+	device & AudioSystem::DEVICE_IN_WIRED_HEADSET)
 	return EXT_USB_DEVICE;
 
     return "default";
@@ -239,8 +239,8 @@ const char *deviceName(alsa_handle_t *handle, uint32_t device, int mode)
 
 snd_pcm_stream_t direction(alsa_handle_t *handle)
 {
-LOGE("direction requext. devices %d, mask %d,  result %d\n", handle->devices, android_audio_legacy::AudioSystem::DEVICE_OUT_ALL, handle->devices & android_audio_legacy::AudioSystem::DEVICE_OUT_ALL);
-    return (handle->devices & android_audio_legacy::AudioSystem::DEVICE_OUT_ALL) ? SND_PCM_STREAM_PLAYBACK
+LOGE("direction requext. devices %d, mask %d,  result %d\n", handle->devices, AudioSystem::DEVICE_OUT_ALL, handle->devices & AudioSystem::DEVICE_OUT_ALL);
+    return (handle->devices & AudioSystem::DEVICE_OUT_ALL) ? SND_PCM_STREAM_PLAYBACK
             : SND_PCM_STREAM_CAPTURE;
 }
 
@@ -427,7 +427,7 @@ status_t setSoftwareParams(alsa_handle_t *handle)
     // Configure ALSA to start the transfer when the buffer is almost full.
     snd_pcm_get_params(handle->handle, &bufferSize, &periodSize);
 
-    if (handle->devices & android_audio_legacy::AudioSystem::DEVICE_OUT_ALL) {
+    if (handle->devices & AudioSystem::DEVICE_OUT_ALL) {
         // For playback, configure ALSA to start the transfer when the
         // buffer is full.
         startThreshold = bufferSize - 1;
@@ -499,8 +499,8 @@ LOGV("%s", __FUNCTION__);
     if (devices & 0x0000FFFF){
         // Zoom2 board doesn't have earpiece device
         // speaker device is used instead
-        if (devices & (android_audio_legacy::AudioSystem::DEVICE_OUT_SPEAKER |
-                   android_audio_legacy::AudioSystem::DEVICE_OUT_EARPIECE)) {
+        if (devices & (AudioSystem::DEVICE_OUT_SPEAKER |
+                   AudioSystem::DEVICE_OUT_EARPIECE)) {
             control.set("HandsfreeR Switch", 1); // on
             control.set("HandsfreeL Switch", 1); // on
             control.set("HandsfreeR Mux", "AudioR2");
@@ -510,7 +510,7 @@ LOGV("%s", __FUNCTION__);
             control.set("HandsfreeL Switch", (unsigned int)0); // off
         }
 
-        if (devices & android_audio_legacy::AudioSystem::DEVICE_OUT_WIRED_HEADSET) {
+        if (devices & AudioSystem::DEVICE_OUT_WIRED_HEADSET) {
             control.set("HeadsetR Mixer AudioR2", 1); // on
             control.set("HeadsetL Mixer AudioL2", 1); // on
             control.set("HandsfreeR Mux", "AudioR2");
@@ -523,7 +523,7 @@ LOGV("%s", __FUNCTION__);
 
     /* for input devices */
     if (devices >> 16) {
-        if (devices & android_audio_legacy::AudioSystem::DEVICE_IN_BUILTIN_MIC) {
+        if (devices & AudioSystem::DEVICE_IN_BUILTIN_MIC) {
             control.set("Analog Left Main Mic Capture Switch", 1); // on
             control.set("Analog Right Sub Mic Capture Switch", 1); // on
         } else {
@@ -531,7 +531,7 @@ LOGV("%s", __FUNCTION__);
             control.set("Analog Right Sub Mic Capture Switch", (unsigned int)0); // off
         }
 
-        if (devices & android_audio_legacy::AudioSystem::DEVICE_IN_WIRED_HEADSET) {
+        if (devices & AudioSystem::DEVICE_IN_WIRED_HEADSET) {
             control.set("Analog Left Headset Mic Capture Switch", 1); // on
         } else {
             control.set("Analog Left Headset Mic Capture Switch", (unsigned int)0); // off
@@ -588,8 +588,8 @@ static status_t s_open(alsa_handle_t *handle, uint32_t devices, int mode, uint32
 
     // We start by requiring USB headset, we'll retry if it does not work
     // hackity-hack...
-    devices |= mode ? android_audio_legacy::AudioSystem::DEVICE_IN_WIRED_HEADSET :\
-                      android_audio_legacy::AudioSystem::DEVICE_OUT_WIRED_HEADSET;
+    devices |= mode ? AudioSystem::DEVICE_IN_WIRED_HEADSET :\
+                      AudioSystem::DEVICE_OUT_WIRED_HEADSET;
 
 open_again:
 
@@ -604,10 +604,10 @@ open_again:
     int err = snd_pcm_open(&handle->handle, devName, direction(handle), 0);
 
     if (err < 0) {
-	if (devices & (android_audio_legacy::AudioSystem::DEVICE_OUT_WIRED_HEADSET |
-		       android_audio_legacy::AudioSystem::DEVICE_IN_WIRED_HEADSET)) {
-		devices &= ~(android_audio_legacy::AudioSystem::DEVICE_IN_WIRED_HEADSET |
-			     android_audio_legacy::AudioSystem::DEVICE_OUT_WIRED_HEADSET);
+	if (devices & (AudioSystem::DEVICE_OUT_WIRED_HEADSET |
+		       AudioSystem::DEVICE_IN_WIRED_HEADSET)) {
+		devices &= ~(AudioSystem::DEVICE_IN_WIRED_HEADSET |
+			     AudioSystem::DEVICE_OUT_WIRED_HEADSET);
 		goto open_again;
 	}
         LOGE("Failed to Initialize any ALSA %s %s device: %s", stream, devName, snd_strerror(err));

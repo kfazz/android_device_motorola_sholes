@@ -19,8 +19,6 @@ on early-boot
     setprop ro.HIDDEN_APP_MEM 7168
     setprop ro.EMPTY_APP_MEM 8192
     
-
-
 on post-fs
    
     start baseimage
@@ -36,11 +34,12 @@ on post-fs-data
     mkdir /data/misc/wifi/sockets 0770 wifi wifi
     mkdir /data/misc/dhcp 0770 dhcp dhcp
     chown dhcp dhcp /data/misc/dhcp
-
-
-    
     setprop vold.post_fs_data_done 1
 
+
+on property:vold.post_fs_data_done=1
+    start mdm_panicd
+#    start pppd-ril tessstinggggg...
 
 on boot
 
@@ -160,11 +159,13 @@ service hciattach /system/bin/hciattach \
 service baseimage /system/bin/dspexec -v -T /system/lib/dsp/baseimage.dof
     class core
     oneshot
+    disabled
 
 service pvrsrv /system/bin/pvrsrvinit
     class core
     user root
     oneshot
+    disabled
 
 # bugreport is triggered by the KEY_LEFTSHIFT and KEY_MENU keycodes
 service bugreport /system/bin/dumpstate -d -v -o /sdcard/bugreports/bugreport
@@ -186,6 +187,7 @@ service ftmipcd /system/bin/ftmipcd
 service mdm_panicd /system/bin/mdm_panicd
    class core
    oneshot
+   disabled
 
 on property:ro.bootmode=factorycable
     start tcmd
@@ -193,8 +195,9 @@ on property:ro.bootmode=factorycable
 
 #get BP version and save to misc
 service savebpver /system/bin/SaveBPVer
-   class late_start
+   class core
    oneshot
+   disabled
 
 on property:dev.bootcomplete=1
    start savebpver

@@ -118,15 +118,20 @@ PRODUCT_PACKAGES += \
     sensors.sholes \
     lights.sholes \
     hwcomposer.default \
-    audio.primary.sholes \
-    audio_policy.sholes \
     VoiceDialer \
     drmserver \
     libdrmframework \
     libdrmframework_jni \
     UsbMassStorageToggle \
     Torch \
-    liba2dp
+    liba2dp \
+    alsa.sholes \
+    alsa.omap3 \
+    alsa.default \
+    acoustics.default 
+
+#    audio.primary.sholes \
+#    audio_policy.sholes \
 #    libfwdlockengine \
 #    libWnnEngDic \
 #    libwnndict \

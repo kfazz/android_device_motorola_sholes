@@ -216,7 +216,7 @@ LOGV("%s: devices %04x mode %d", __FUNCTION__, devices, mode);
 
     mAlsaControl = alsaControl;
 
-    if ((mode == android_audio_legacy::AudioSystem::MODE_IN_CALL) &&
+    if ((mode == AudioSystem::MODE_IN_CALL) &&
         (mVoiceCallState == AUDIO_MODEM_VOICE_CALL_OFF)) {
         // enter in voice call mode
         error = setCurrentAudioModemModes(devices);
@@ -234,7 +234,7 @@ LOGV("%s: devices %04x mode %d", __FUNCTION__, devices, mode);
         }
 #endif
         mVoiceCallState = AUDIO_MODEM_VOICE_CALL_ON;
-    } else if ((mode == android_audio_legacy::AudioSystem::MODE_IN_CALL) &&
+    } else if ((mode == AudioSystem::MODE_IN_CALL) &&
                (mVoiceCallState == AUDIO_MODEM_VOICE_CALL_ON)) {
         // update in voice call mode
         mPreviousAudioModemModes = mCurrentAudioModemModes;
@@ -264,7 +264,7 @@ LOGV("%s: devices %04x mode %d", __FUNCTION__, devices, mode);
         } else {
             LOGI("Audio Modem Mode doesn't changed: no update needed");
         }
-    } else if ((mode != android_audio_legacy::AudioSystem::MODE_IN_CALL) &&
+    } else if ((mode != AudioSystem::MODE_IN_CALL) &&
                (mVoiceCallState == AUDIO_MODEM_VOICE_CALL_ON)) {
         // we just exit voice call mode
         mPreviousAudioModemModes = mCurrentAudioModemModes;

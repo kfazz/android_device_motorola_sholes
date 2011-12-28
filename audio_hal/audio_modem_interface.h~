@@ -35,14 +35,14 @@ class AudioModemInterface
     */
 
     enum audio_modem_modes {
-        AUDIO_MODEM_HANDSET =   android_audio_legacy::AudioSystem::DEVICE_OUT_EARPIECE,
-        AUDIO_MODEM_HANDFREE =  android_audio_legacy::AudioSystem::DEVICE_OUT_SPEAKER,
-        AUDIO_MODEM_HEADSET =   android_audio_legacy::AudioSystem::DEVICE_OUT_WIRED_HEADSET |
-                                android_audio_legacy::AudioSystem::DEVICE_OUT_WIRED_HEADPHONE,
-        AUDIO_MODEM_AUX =    android_audio_legacy::AudioSystem::DEVICE_OUT_AUX_DIGITAL,
-        AUDIO_MODEM_BLUETOOTH = android_audio_legacy::AudioSystem::DEVICE_OUT_BLUETOOTH_SCO |
-                                android_audio_legacy::AudioSystem::DEVICE_OUT_BLUETOOTH_SCO_HEADSET |
-                                android_audio_legacy::AudioSystem::DEVICE_OUT_BLUETOOTH_SCO_CARKIT,
+        AUDIO_MODEM_HANDSET =   AudioSystem::DEVICE_OUT_EARPIECE,
+        AUDIO_MODEM_HANDFREE =  AudioSystem::DEVICE_OUT_SPEAKER,
+        AUDIO_MODEM_HEADSET =   AudioSystem::DEVICE_OUT_WIRED_HEADSET |
+                                AudioSystem::DEVICE_OUT_WIRED_HEADPHONE,
+        AUDIO_MODEM_AUX =    AudioSystem::DEVICE_OUT_AUX_DIGITAL,
+        AUDIO_MODEM_BLUETOOTH = AudioSystem::DEVICE_OUT_BLUETOOTH_SCO |
+                                AudioSystem::DEVICE_OUT_BLUETOOTH_SCO_HEADSET |
+                                AudioSystem::DEVICE_OUT_BLUETOOTH_SCO_CARKIT,
         AUDIO_MODEM_ALL = AUDIO_MODEM_HANDSET | AUDIO_MODEM_HANDFREE |
                           AUDIO_MODEM_HEADSET | AUDIO_MODEM_AUX |
                           AUDIO_MODEM_BLUETOOTH,
