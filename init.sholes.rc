@@ -37,9 +37,10 @@ on post-fs-data
     setprop vold.post_fs_data_done 1
 
 
-on property:vold.post_fs_data_done=1
-    start mdm_panicd
-#    start pppd-ril tessstinggggg...
+#on property:vold.post_fs_data_done=1
+#    start mdm_panicd
+#    start pppd-ril 
+#tessstinggggg...
 
 on boot
 
@@ -144,9 +145,8 @@ service battd /system/bin/battd
     oneshot
 
 service pppd-ril /system/bin/pppd-ril /dev/ttyUSB0 call pppd-ril.options plugin /system/lib/libpppd_plugin-ril.so
-    class core
+    class main
     user root
-    disabled
     oneshot
 
 service hciattach /system/bin/hciattach \
@@ -185,9 +185,8 @@ service ftmipcd /system/bin/ftmipcd
     disabled
 
 service mdm_panicd /system/bin/mdm_panicd
-   class core
+   class main
    oneshot
-   disabled
 
 on property:ro.bootmode=factorycable
     start tcmd

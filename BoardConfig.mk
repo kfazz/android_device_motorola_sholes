@@ -26,9 +26,9 @@ SMALLER_FONT_FOOTPRINT := true
 # WARNING: This line must come *before* including the proprietary
 # variant, so that it gets overwritten by the parent (which goes
 # against the traditional rules of inheritance).
-USE_CAMERA_STUB := false
-BOARD_USE_FROYO_LIBCAMERA := true
-BOARD_USES_TI_CAMERA_HAL := true
+USE_CAMERA_STUB := true
+#BOARD_USE_FROYO_LIBCAMERA := true
+#BOARD_USES_TI_CAMERA_HAL := true
 
 
 BOARD_USE_YUV422I_DEFAULT_COLORFORMAT := true
@@ -57,11 +57,11 @@ TARGET_PROVIDES_INIT_RC := false
 
 # audio stuff
 TARGET_PROVIDES_LIBAUDIO := false
-BOARD_USES_GENERIC_AUDIO := true
-BOARD_USES_ALSA_AUDIO := true #we have /dev/snd/mixer, is it alsa? testing...
-BUILD_WITH_ALSA_UTILS := true
+BOARD_USES_GENERIC_AUDIO := false
+BOARD_USES_ALSA_AUDIO := false #we have /dev/snd/mixer, is it alsa? testing...
+BUILD_WITH_ALSA_UTILS := false
 BOARD_USES_AUDIO_LEGACY := true
-BOARD_USES_TI_OMAP_MODEM_AUDIO := true
+#BOARD_USES_TI_OMAP_MODEM_AUDIO := true
 
 
 # HW Graphics (EGL fixes + webkit fix)
