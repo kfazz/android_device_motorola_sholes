@@ -100,10 +100,10 @@ TARGET_USE_OMAP_COMPAT  := true
 BUILD_WITH_TI_AUDIO := 1
 BUILD_PV_VIDEO_ENCODERS := 1
 
-#BOARD_HAVE_GPS := true
+BOARD_HAVE_GPS := true
 BOARD_GPS_LIBRARIES := libmoto_gps
 BOARD_USES_GPSSHIM := true
- #maybe??
+
 TARGET_BOOTLOADER_BOARD_NAME := sholes
 
 # use pre-kernel.35 vold usb mounting
@@ -158,8 +158,6 @@ BOARD_FLASH_BLOCK_SIZE := 131072
 
 #TARGET_NO_RECOVERY := true # causes no rule to make otapackage
 #TARGET_OTA_NO_RECOVERY := true
-#???
-INSTALLED_RECOVERYIMAGE_TARGET := 
 BOARD_HAS_SMALL_RECOVERY := true
 
 #TARGET_RECOVERY_UI_LIB := librecovery_ui_sholes librecovery_ui_generic
