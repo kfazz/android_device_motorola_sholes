@@ -19,6 +19,10 @@
 # not specialized for any geography.
 #
 
+PRODUCT_COPY_FILES := device/sample/etc/apns-conf_verizon.xml:system/etc/apns-conf.xml
+
+
+
 # The gps config appropriate for this device
 $(call inherit-product, device/common/gps/gps_us_supl.mk)
 
@@ -26,7 +30,8 @@ $(call inherit-product, device/common/gps/gps_us_supl.mk)
 
 PRODUCT_COPY_FILES += \
     device/motorola/sholes/init.sholes.rc:root/init.sholes.rc \
-    device/motorola/sholes/ueventd.sholes.rc:root/ueventd.sholes.rc
+    device/motorola/sholes/ueventd.sholes.rc:root/ueventd.sholes.rc \
+    device/motorola/sholes/sysctl.conf:system/etc/sysctl.conf 
 
 #    device/motorola/sholes/init.rc:root/init.rc \
 
@@ -52,13 +57,16 @@ PRODUCT_PROPERTY_OVERRIDES += \
 	ro.url.safetylegal=http://www.motorola.com/staticfiles/Support/legal/?model=A855 \
 	ro.setupwizard.enable_bypass=1 \
 	ro.media.dec.jpeg.memcap=20000000 \
+        ro.product.multi_touch_enabled=true \
+        ro.product.max_num_touch=5 \
     	keyguard.no_require_sim=true \
    	ro.com.android.dataroaming=true \
     	ro.com.android.dateformat=MM-dd-yyyy \
     	ro.config.ringtone=Ring_Synth_04.ogg \
     	ro.config.notification_sound=pixiedust.ogg \
         dalvik.vm.heapstartsize=5m \
-        dalvik.vm.heapsize=48m
+        dalvik.vm.heapsize=48m \
+        debug.db.uid=32767
 #        debug.sf.hw=1
 
 #        ro.sf.hwrotation=90 \
@@ -79,26 +87,6 @@ PRODUCT_COPY_FILES += \
     frameworks/base/data/etc/android.hardware.touchscreen.multitouch.distinct.xml:system/etc/permissions/android.hardware.touchscreen.multitouch.distinct.xml \
     frameworks/base/data/etc/android.software.sip.voip.xml:system/etc/permissions/android.software.sip.voip.xml \
 
-# ALSA configuration files
-PRODUCT_COPY_FILES += \
-	external/alsa-lib/src/conf/alsa.conf:system/usr/share/alsa/alsa.conf \
-	external/alsa-lib/src/conf/cards/aliases.conf:system/usr/share/alsa/cards/aliases.conf \
-	external/alsa-lib/src/conf/pcm/center_lfe.conf:system/usr/share/alsa/pcm/center_lfe.conf \
-	external/alsa-lib/src/conf/pcm/default.conf:system/usr/share/alsa/pcm/default.conf \
-	external/alsa-lib/src/conf/pcm/dmix.conf:system/usr/share/alsa/pcm/dmix.conf \
-	external/alsa-lib/src/conf/pcm/dpl.conf:system/usr/share/alsa/pcm/dpl.conf \
-	external/alsa-lib/src/conf/pcm/dsnoop.conf:system/usr/share/alsa/pcm/dsnoop.conf \
-	external/alsa-lib/src/conf/pcm/front.conf:system/usr/share/alsa/pcm/front.conf \
-	external/alsa-lib/src/conf/pcm/iec958.conf:system/usr/share/alsa/pcm/iec958.conf \
-	external/alsa-lib/src/conf/pcm/modem.conf:system/usr/share/alsa/pcm/modem.conf \
-	external/alsa-lib/src/conf/pcm/rear.conf:system/usr/share/alsa/pcm/rear.conf \
-	external/alsa-lib/src/conf/pcm/side.conf:system/usr/share/alsa/pcm/side.conf \
-	external/alsa-lib/src/conf/pcm/surround40.conf:system/usr/share/alsa/pcm/surround40.conf \
-	external/alsa-lib/src/conf/pcm/surround41.conf:system/usr/share/alsa/pcm/surround41.conf \
-	external/alsa-lib/src/conf/pcm/surround50.conf:system/usr/share/alsa/pcm/surround50.conf \
-	external/alsa-lib/src/conf/pcm/surround51.conf:system/usr/share/alsa/pcm/surround51.conf \
-	external/alsa-lib/src/conf/pcm/surround71.conf:system/usr/share/alsa/pcm/surround71.conf
-
 
 
 # media config xml file
@@ -116,12 +104,28 @@ PRODUCT_COPY_FILES += \
     device/motorola/sholes/sholes-keypad.idc:system/usr/idc/sholes-keypad.idc \
     device/motorola/sholes/cpcap-key.kcm:system/usr/keychars/cpcap-key.kcm
     
+# ICS sound
+PRODUCT_PACKAGES += \
+hcitool hciattach hcidump \
+libaudioutils audio.a2dp.default audio_policy.omap3 \
+libaudiohw_legacy audio.primary.omap3
+
+# ICS graphics
+PRODUCT_PACKAGES += libGLESv2 libEGL libGLESv1_CM
+
+# TO FIX for ICS
+PRODUCT_PACKAGES += gralloc.default hwcomposer.default
+
+# ICS Camera
+PRODUCT_PACKAGES += Camera overlay.omap3 camera.sholes libcamera libui
+
+
+
 PRODUCT_PACKAGES += \
     librs_jni \
     tiwlan.ini \
     dspexec \
     libbridge \
-    gps.sholes \
     overlay.omap3 \
     wlan_cu \
     libtiOsLib \
@@ -138,6 +142,7 @@ PRODUCT_PACKAGES += \
     libOMX.TI.Video.Decoder \
     libOMX.TI.Video.encoder \
     libVendor_ti_omx \
+    gps.sholes \
     sensors.sholes \
     lights.sholes \
     hwcomposer.default \
@@ -147,14 +152,17 @@ PRODUCT_PACKAGES += \
     libdrmframework_jni \
     UsbMassStorage \
     Torch \
-    liba2dp \
-    alsa.sholes \
-    alsa.omap3 \
-    alsa.default \
-    acoustics.default 
+    liba2dp
 
-#    audio.primary.sholes \
-#    audio_policy.sholes \
+ #   liba2dp \
+ #   audio.primary.sholes \
+ #   audio_policy.sholes 
+ #   alsa.sholes \
+ #   alsa.omap3 \
+ #   alsa.default \
+ #   acoustics.default 
+
+
 #    libfwdlockengine \
 #    libWnnEngDic \
 #    libwnndict \
@@ -168,8 +176,8 @@ PRODUCT_TAGS += dalvik.gc.type-precise
 PRODUCT_LOCALES += hdpi
 
 PRODUCT_COPY_FILES += \
-    device/motorola/sholes/vold.fstab:system/etc/vold.fstab\
-    device/motorola/sholes/apns-conf.xml:system/etc/apns-conf.xml
+    device/motorola/sholes/vold.fstab:system/etc/vold.fstab
+#    device/motorola/sholes/apns-conf.xml:system/etc/apns-conf.xml
 
 # copy all kernel modules under the "modules" directory to system/lib/modules
 PRODUCT_COPY_FILES += $(shell \

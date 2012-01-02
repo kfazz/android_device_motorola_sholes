@@ -30,6 +30,8 @@ USE_CAMERA_STUB := true
 #BOARD_USE_FROYO_LIBCAMERA := true
 #BOARD_USES_TI_CAMERA_HAL := true
 
+BOARD_RIL_LIBRARY=libmoto_ril
+USE_TI_COMMANDS:= true
 
 BOARD_USE_YUV422I_DEFAULT_COLORFORMAT := true
 
@@ -56,16 +58,16 @@ TARGET_PROVIDES_INIT_TARGET_RC := true
 TARGET_PROVIDES_INIT_RC := false
 
 # audio stuff
-TARGET_PROVIDES_LIBAUDIO := false
-BOARD_USES_GENERIC_AUDIO := false
+TARGET_PROVIDES_LIBAUDIO := true 
+BOARD_USES_GENERIC_AUDIO := false  #testinggg
 BOARD_USES_ALSA_AUDIO := false #we have /dev/snd/mixer, is it alsa? testing...
 BUILD_WITH_ALSA_UTILS := false
 BOARD_USES_AUDIO_LEGACY := true
-#BOARD_USES_TI_OMAP_MODEM_AUDIO := true
+BOARD_USES_TI_OMAP_MODEM_AUDIO := true
 
 
 # HW Graphics (EGL fixes + webkit fix)
-USE_OPENGL_RENDERER := true
+USE_OPENGL_RENDERER := false
 BOARD_EGL_CFG := device/motorola/sholes/egl.cfg
 
 #-DMISSING_EGL_PIXEL_FORMAT_YV12
@@ -80,14 +82,33 @@ BOARD_NO_RGBX_8888 := true
 #touchscreen fix
 BOARD_USE_LEGACY_TOUCHSCREEN := true
 OMAP_ENHANCEMENT := true
-HARDWARE_OMX := true  #check this too
 
-BOARD_HAVE_GPS := true
+TARGET_OMAP3 := true
+
+COMMON_GLOBAL_CFLAGS += -DTARGET_OMAP3 -DOMAP_COMPAT -DMOTOROLA_UIDS
+
+
+
+HARDWARE_OMX := true  #check this too
+TARGET_USE_OMAP_COMPAT  := true
+BUILD_WITH_TI_AUDIO := 1
+BUILD_PV_VIDEO_ENCODERS := 1
+
+#BOARD_HAVE_GPS := true
+BOARD_GPS_LIBRARIES := libmoto_gps
 BOARD_USES_GPSSHIM := true
+ #maybe??
 TARGET_BOOTLOADER_BOARD_NAME := sholes
 
 # use pre-kernel.35 vold usb mounting
 BOARD_USE_USB_MASS_STORAGE_SWITCH := true
+
+
+#BOARD_USE_KINETO_COMPATIBILITY := true #what's this do???
+
+TARGET_USE_CUSTOM_LUN_FILE_PATH := "/sys/devices/platform/usb_mass_storage/lun0/file"
+
+ENABLE_SENSORS_COMPAT := true
 
 # Wifi related defines
 #BOARD_WPA_SUPPLICANT_DRIVER := CUSTOM
@@ -140,10 +161,11 @@ BOARD_HAS_SMALL_RECOVERY := true
 #TARGET_RECOVERY_UPDATER_LIBS += librecovery_updater_generic
 
 USE_SHOLES_PROPERTY := true
+TARGET_USE_CUSTOM_LUN_FILE_PATH := "/sys/devices/platform/usb_mass_storage/lun0/file"
 
 #KERNEL_DEFCONFIG := cyanogen_sholes_defconfig
 
 TARGET_PREBUILT_KERNEL := device/motorola/sholes/kernel
 TARGET_PREBUILT_RECOVERY_KERNEL := device/motorola/sholes/recovery_kernel
-
+PRODUCT_SPECIFIC_DEFINES += TARGET_PRELINKER_MAP=\$(TOP)/device/htc/desirec/prelink-linux-arm-desirec.map
 

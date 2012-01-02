@@ -28,7 +28,8 @@ on post-fs-data
 
     chmod 775 /data
     chmod 775 /data/system
-    chmod 771 /data/misc/ril
+ #   chmod 771 /data/misc/ril
+ #   chmod 777 /data/misc/ril/RIL_RDS_SOCKET
     # wifi dirs
     mkdir /data/misc/wifi 0770 wifi wifi
     mkdir /data/misc/wifi/sockets 0770 wifi wifi
@@ -148,6 +149,7 @@ service pppd-ril /system/bin/pppd-ril /dev/ttyUSB0 call pppd-ril.options plugin 
     class main
     user root
     oneshot
+    disabled
 
 service hciattach /system/bin/hciattach \
     -n -t 10 /dev/ttyS1 texasalt 3000000 flow
@@ -188,16 +190,17 @@ service mdm_panicd /system/bin/mdm_panicd
    class main
    oneshot
 
+
 on property:ro.bootmode=factorycable
     start tcmd
     start ftmipcd
 
 #get BP version and save to misc
 service savebpver /system/bin/SaveBPVer
-   class core
+   class late_start
    oneshot
    disabled
 
-on property:dev.bootcomplete=1
-   start savebpver
+#on property:dev.bootcomplete=1
+#   start savebpver
 
