@@ -30,8 +30,14 @@ USE_CAMERA_STUB := true
 #BOARD_USE_FROYO_LIBCAMERA := true
 #BOARD_USES_TI_CAMERA_HAL := true
 
-BOARD_RIL_LIBRARY=libmoto_ril
 USE_TI_COMMANDS:= true
+
+TARGET_NO_BOOTLOADER := true
+TARGET_NO_RECOVERY := true
+#TARGET_NO_KERNEL := true
+TARGET_NO_RADIOIMAGE := true
+
+
 
 BOARD_USE_YUV422I_DEFAULT_COLORFORMAT := true
 
@@ -167,5 +173,5 @@ TARGET_USE_CUSTOM_LUN_FILE_PATH := "/sys/devices/platform/usb_mass_storage/lun0/
 
 TARGET_PREBUILT_KERNEL := device/motorola/sholes/kernel
 TARGET_PREBUILT_RECOVERY_KERNEL := device/motorola/sholes/recovery_kernel
-PRODUCT_SPECIFIC_DEFINES += TARGET_PRELINKER_MAP=\$(TOP)/device/htc/desirec/prelink-linux-arm-desirec.map
+
 
