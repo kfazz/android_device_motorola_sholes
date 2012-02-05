@@ -34,3 +34,46 @@ ro.usb.use_custom_service=1
 
 # use 1% battery steps
 ro.product.use_charge_counter=1
+
+# Use TI hotspot code
+wifi.hotspot.ti=1
+
+# to spare some RAM
+persist.sys.purgeable_assets=1
+
+# enable 16bit transparency by default
+persist.sys.use_16bpp_alpha=1
+
+
+#ril options found in source
+#ro.telephonyril.v3=icccardstatus,signalstrength,facilitylock,skipbrokendatacall
+# not used ,datacall
+#ro.cdma.ecmexittimer
+#ro.cdma.idpstring
+#ro.cdma.otaspnumschema
+#ro.cdma.data_retry_config
+#ro.cdma.homesystem
+#ro.cdma.timetoradiorestart 60000
+#ro.cdma.data_retry_config
+#ro.cdma.home.operator.numeric
+#ro.cdma.home.operator.alpha
+#
+#Moto ril sholes accepted properties found via strings
+#persist.ril.mux.timeout.enbld
+#persist.ril.enableradio.powerup
+#persist.ril.uart.flowctrl
+#persist.ril.mux.noofchannels
+#persist.ril.mux.ttydevice
+#persist.ril.mux.retries
+#persist.ril.mux.sleep
+#persist.ril.mux.logmask
+#persist.ril.rssi.enable.param6
+#persist.ril.modem.ttydevice
+#persist.ril.pppd.start.fail.max
+ 
+#ro.ril.ecclist
+#ro.ril.barcode
+#ro.build.id
+#ro.ril.wake_lock_timeout
+#ro.ril.ecclist
+#

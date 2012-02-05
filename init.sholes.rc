@@ -4,23 +4,27 @@ on early-init
     # for backwards compatibility
     symlink /mnt/sdcard /sdcard
 
+# Create mountpoints and mount tmpfs
+    mkdir /pds 0775 system system
+    mkdir /tmp 0777 system system
+    mount tmpfs tmpfs /tmp size=2m
 
-on early-boot
+# Mount mtd partitions
+    # mount /pds as r/w
+    # We chown/chmod /pds again so because mount is run as root + defaults
+    symlink /pds /config
+    mount yaffs2 mtd@pds /pds nosuid nodev
+    chown system system /pds
+    chmod 0775 /pds
+    mkdir /pds/comm_drv
+    chown radio radio /pds/comm_drv
+    chmod 0770 /pds/comm_drv
+    mkdir /pds/public
+    chown system shell /pds/public
+    chmod 0775 /pds/public
 
-# Adjust the out of memory thresholds to account for the larget
-# space on sholes.  These numbers are in pages (4k).  Must be kept
-# in sync with init.rc.  This must be done before the regular init.rc
-# since these properies can't change once set.
-    setprop ro.FOREGROUND_APP_MEM 2048
-    setprop ro.VISIBLE_APP_MEM 3072
-    setprop ro.SECONDARY_SERVER_MEM 6144
-    setprop ro.BACKUP_APP_MEM 6144
-    setprop ro.HOME_APP_MEM 6144
-    setprop ro.HIDDEN_APP_MEM 7168
-    setprop ro.EMPTY_APP_MEM 8192
     
 on post-fs
-   
     start baseimage
     start pvrsrv 
 
@@ -28,9 +32,10 @@ on post-fs-data
 
     chmod 775 /data
     chmod 775 /data/system
- #   chmod 771 /data/misc/ril
- #   chmod 777 /data/misc/ril/RIL_RDS_SOCKET
+    chmod 771 /data/misc/ril
+    chmod 777 /data/misc/ril/RIL_RDS_SOCKET
     # wifi dirs
+    mkdir /pds/wifi 0771 wifi wifi
     mkdir /data/misc/wifi 0770 wifi wifi
     mkdir /data/misc/wifi/sockets 0770 wifi wifi
     mkdir /data/misc/dhcp 0770 dhcp dhcp
@@ -45,8 +50,6 @@ on post-fs-data
 
 on boot
 
-# Overwrite what init.rc selected for the memory killer params to match above.
-    write /sys/module/lowmemorykiller/parameters/minfree 2048,3072,4096,6144,7168,8192
 
     mount yaffs2 mtd@pds /config ro no-checkpoint-write
 
@@ -103,6 +106,20 @@ on boot
     write /proc/sys/kernel/softlockup_panic 1
 
 # Load traffic shaping modules
+#    insmod /system/lib/modules/cfbcopyarea.ko
+#    insmod /system/lib/modules/cfbfillrect.ko
+#    insmod /system/lib/modules/cfbimgblt.ko
+
+#    insmod /system/lib/modules/omapdss.ko dsi_fps=1 dsi_perf=1 def_disp="sholes-panel" def_disp_name=panel-sholes
+
+#    insmod /system/lib/modules/panel-sholes.ko
+
+#    insmod /system/lib/modules/output.ko
+#    insmod /system/lib/modules/omapvout-bp.ko
+#    insmod /system/lib/modules/vout.ko
+
+#    insmod /system/lib/modules/omapfb.ko vram=0:8m
+
     insmod /system/lib/modules/ifb.ko
     insmod /system/lib/modules/act_mirred.ko
     insmod /system/lib/modules/sch_ingress.ko
@@ -110,6 +127,7 @@ on boot
     insmod /system/lib/modules/cls_u32.ko
     insmod /system/lib/modules/sch_htb.ko
     insmod /system/lib/modules/em_u32.ko
+
 
 # Ecompass daemon
 service akmd2 /system/bin/akmd2
@@ -148,8 +166,8 @@ service battd /system/bin/battd
 service pppd-ril /system/bin/pppd-ril /dev/ttyUSB0 call pppd-ril.options plugin /system/lib/libpppd_plugin-ril.so
     class main
     user root
-    oneshot
     disabled
+    oneshot
 
 service hciattach /system/bin/hciattach \
     -n -t 10 /dev/ttyS1 texasalt 3000000 flow
@@ -163,11 +181,14 @@ service baseimage /system/bin/dspexec -v -T /system/lib/dsp/baseimage.dof
     oneshot
     disabled
 
+#sgx/rc.pvr start
 service pvrsrv /system/bin/pvrsrvinit
     class core
     user root
     oneshot
     disabled
+
+
 
 # bugreport is triggered by the KEY_LEFTSHIFT and KEY_MENU keycodes
 service bugreport /system/bin/dumpstate -d -v -o /sdcard/bugreports/bugreport
@@ -187,9 +208,9 @@ service ftmipcd /system/bin/ftmipcd
     disabled
 
 service mdm_panicd /system/bin/mdm_panicd
-   class main
+   class core
    oneshot
-
+#   disabled
 
 on property:ro.bootmode=factorycable
     start tcmd
@@ -201,6 +222,6 @@ service savebpver /system/bin/SaveBPVer
    oneshot
    disabled
 
-#on property:dev.bootcomplete=1
-#   start savebpver
+on property:dev.bootcomplete=1
+   start savebpver
 

@@ -31,9 +31,9 @@ $(call inherit-product, device/common/gps/gps_us_supl.mk)
 PRODUCT_COPY_FILES += \
     device/motorola/sholes/init.sholes.rc:root/init.sholes.rc \
     device/motorola/sholes/ueventd.sholes.rc:root/ueventd.sholes.rc \
-    device/motorola/sholes/sysctl.conf:system/etc/sysctl.conf 
-
-#    device/motorola/sholes/init.rc:root/init.rc \
+    device/motorola/sholes/sysctl.conf:system/etc/sysctl.conf \
+    device/motorola/sholes/init.rc:root/init.rc \
+    device/motorola/sholes/init_early_bind_mounts.sh:system/bin/init_early_bind_mounts.sh
 
 ## (2) Also get non-open-source CDMA-specific aspects if available
 $(call inherit-product-if-exists, vendor/motorola/sholes/sholes-vendor.mk)
@@ -66,9 +66,15 @@ PRODUCT_PROPERTY_OVERRIDES += \
     	ro.config.notification_sound=pixiedust.ogg \
         dalvik.vm.heapstartsize=5m \
         dalvik.vm.heapsize=48m \
-        debug.db.uid=32767
-#        debug.sf.hw=1
+	debug.sf.nobootanimation=1 \
+        hwui.render_dirty_regions=false \
+        ro.telephony.ril.v3=signalstrength,skipbrokendatacall,facilitylock,icccardstatus
+#,datacall
 
+
+#        debug.db.uid=32767
+#	ro.telephony.ril.v3=icccardstatus,datacall,signalstrength,facilitylock
+#        debug.sf.hw=1
 #        ro.sf.hwrotation=90 \
 #        debug.sf.ddms=1 \
 
@@ -107,9 +113,10 @@ PRODUCT_COPY_FILES += \
 # ICS sound
 PRODUCT_PACKAGES += \
 hcitool hciattach hcidump \
-libaudioutils audio.a2dp.default audio_policy.omap3 \
-libaudiohw_legacy audio.primary.omap3
-
+libaudioutils audio.a2dp.default  \
+libaudiohw_legacy audio.primary.sholes audio_policy.sholes
+#alsa.omap3 alsa.default acoustics.default audio.primary.omap3 audio_policy.omap3
+ 
 # ICS graphics
 PRODUCT_PACKAGES += libGLESv2 libEGL libGLESv1_CM
 
@@ -129,10 +136,15 @@ PRODUCT_PACKAGES += \
     overlay.omap3 \
     wlan_cu \
     libtiOsLib \
+    libtiOsLibAP \
     wlan_loader \
+    tiap_loader \
     libCustomWifi \
     wpa_supplicant.conf \
     dhcpcd.conf \
+    hostap \
+    hostapd.conf \
+    libhostapdcli \
     libOMX.TI.AAC.encode \
     libOMX.TI.AMR.encode \
     libOMX.TI.WBAMR.encode \
@@ -152,7 +164,13 @@ PRODUCT_PACKAGES += \
     libdrmframework_jni \
     UsbMassStorage \
     Torch \
-    liba2dp
+    liba2dp \
+    PhaseBeam \
+    tiap_cu \
+    tiap_loader \
+    libfnc
+
+#    systembinsh
 
  #   liba2dp \
  #   audio.primary.sholes \
@@ -161,8 +179,6 @@ PRODUCT_PACKAGES += \
  #   alsa.omap3 \
  #   alsa.default \
  #   acoustics.default 
-
-
 #    libfwdlockengine \
 #    libWnnEngDic \
 #    libwnndict \

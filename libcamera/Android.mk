@@ -2,17 +2,20 @@ ifeq ($(TARGET_BOOTLOADER_BOARD_NAME),sholes)
 
 LOCAL_PATH:= $(call my-dir)
 
-include $(CLEAR_VARS)
+#Using prebuilt until fix.
 
-#LOCAL_SRC_FILES:= JordanCameraWrapper.cpp
-LOCAL_SRC_FILES:= JordanCameraWrapper_test.cpp
+#include $(CLEAR_VARS)
 
-LOCAL_SHARED_LIBRARIES:= libdl libutils libcutils libcamera_client
+#LOCAL_SRC_FILES:= JordanCameraWrapper_test.cpp
 
-LOCAL_MODULE := libcamera2
-LOCAL_MODULE_TAGS := optional
+#LOCAL_SHARED_LIBRARIES:= libdl libutils libcutils libcamera_client
 
-include $(BUILD_SHARED_LIBRARY)
+#LOCAL_C_INCLUDES := $(ANDROID_BUILD_TOP)/frameworks/base/services/camera/libcameraservice
+#LOCAL_MODULE := libcamera
+#LOCAL_MODULE_TAGS := optional
+
+#include $(BUILD_SHARED_LIBRARY)
+
 
 include $(CLEAR_VARS)
 
@@ -20,22 +23,21 @@ LOCAL_MODULE := camera.$(TARGET_BOOTLOADER_BOARD_NAME)
 LOCAL_MODULE_PATH := $(TARGET_OUT_SHARED_LIBRARIES)/hw
 LOCAL_MODULE_TAGS := optional
 
-LOCAL_C_INCLUDES := \
-    hardware/libhardware/include/hardware
 LOCAL_SHARED_LIBRARIES := \
-    libdl \
     libcutils \
     libutils \
     libmedia \
     libcamera_client \
     libbinder \
-    libhardware \
     libhardware_legacy
 
 LOCAL_SHARED_LIBRARIES += libdl
-LOCAL_SHARED_LIBRARIES += libcamera2
 
-LOCAL_SRC_FILES := hmi.c CameraHardwareInterfaceShim.cpp
+LOCAL_SRC_FILES := camera.cpp
+LOCAL_SHARED_LIBRARIES := liblog libutils libcutils
+LOCAL_SHARED_LIBRARIES += libui libhardware libcamera_client
+LOCAL_SHARED_LIBRARIES += libcamera
+LOCAL_PRELINK_MODULE := false
 
 LOCAL_STATIC_LIBRARIES := \
     libmedia_helper

@@ -33,10 +33,8 @@ USE_CAMERA_STUB := true
 USE_TI_COMMANDS:= true
 
 TARGET_NO_BOOTLOADER := true
-TARGET_NO_RECOVERY := true
-#TARGET_NO_KERNEL := true
-TARGET_NO_RADIOIMAGE := true
-
+#TARGET_NO_RADIOIMAGE := true
+# BOARD_HAS_SMALL_RECOVERY := true
 
 
 BOARD_USE_YUV422I_DEFAULT_COLORFORMAT := true
@@ -61,26 +59,22 @@ ARCH_ARM_HAVE_TLS_REGISTER := false #check this, apparently omap3430 has the reg
 
 ##necessary?
 TARGET_PROVIDES_INIT_TARGET_RC := true
-TARGET_PROVIDES_INIT_RC := false
+TARGET_PROVIDES_INIT_RC := true
 
 # audio stuff
-TARGET_PROVIDES_LIBAUDIO := true 
-BOARD_USES_GENERIC_AUDIO := false  #testinggg
-BOARD_USES_ALSA_AUDIO := false #we have /dev/snd/mixer, is it alsa? testing...
-BUILD_WITH_ALSA_UTILS := false
+TARGET_PROVIDES_LIBAUDIO := true
+BOARD_USES_GENERIC_AUDIO := false  
+#BOARD_USES_ALSA_AUDIO := true
+#BUILD_WITH_ALSA_UTILS := true
 BOARD_USES_AUDIO_LEGACY := true
-BOARD_USES_TI_OMAP_MODEM_AUDIO := true
-
+#BOARD_USES_TI_OMAP_MODEM_AUDIO := true
+#BUILD_SHOLES_AUDIO := false #needs lots more work 
 
 # HW Graphics (EGL fixes + webkit fix)
 USE_OPENGL_RENDERER := false
 BOARD_EGL_CFG := device/motorola/sholes/egl.cfg
 
-#-DMISSING_EGL_PIXEL_FORMAT_YV12
-COMMON_GLOBAL_CFLAGS += -DMISSING_EGL_EXTERNAL_IMAGE -DMISSING_GRALLOC_BUFFERS \
-			-DBOARD_GL_OES_EGL_IMG_EXTERNAL_HACK 
-
-BOARD_EGL_GRALLOC_USAGE_FILTER := true
+COMMON_GLOBAL_CFLAGS += -DMISSING_EGL_EXTERNAL_IMAGE -DMISSING_EGL_PIXEL_FORMAT_YV12 -DMISSING_GRALLOC_BUFFERS
 BOARD_NO_RGBX_8888 := true
 
 
@@ -93,15 +87,12 @@ TARGET_OMAP3 := true
 
 COMMON_GLOBAL_CFLAGS += -DTARGET_OMAP3 -DOMAP_COMPAT -DMOTOROLA_UIDS
 
-
-
 HARDWARE_OMX := true  #check this too
 TARGET_USE_OMAP_COMPAT  := true
 BUILD_WITH_TI_AUDIO := 1
 BUILD_PV_VIDEO_ENCODERS := 1
 
 BOARD_HAVE_GPS := true
-BOARD_GPS_LIBRARIES := libmoto_gps
 BOARD_USES_GPSSHIM := true
 
 TARGET_BOOTLOADER_BOARD_NAME := sholes
@@ -117,17 +108,6 @@ TARGET_USE_CUSTOM_LUN_FILE_PATH := "/sys/devices/platform/usb_mass_storage/lun0/
 ENABLE_SENSORS_COMPAT := true
 
 # Wifi related defines
-#BOARD_WPA_SUPPLICANT_DRIVER := CUSTOM
-#BOARD_WPA_SUPPLICANT_PRIVATE_LIB := libCustomWifi
-#WPA_SUPPLICANT_VERSION      := VER_0_6_X
-#BOARD_WLAN_DEVICE           := tiwlan0
-#WIFI_DRIVER_MODULE_PATH     := "/system/lib/modules/tiwlan_drv.ko"
-#BOARD_WLAN_TI_STA_DK_ROOT   := system/wlan/ti/wilink_6_1
-#WIFI_DRIVER_MODULE_ARG      := ""
-#WIFI_DRIVER_MODULE_NAME     := "tiwlan_drv"
-#WIFI_FIRMWARE_LOADER        := "wlan_loader"
-
-# Wifi related defines
 BOARD_WLAN_DEVICE := wl1271
 WPA_SUPPLICANT_VERSION := VER_0_6_X
 BOARD_WPA_SUPPLICANT_DRIVER := CUSTOM
@@ -141,8 +121,12 @@ AP_CONFIG_DRIVER_WILINK := true
 WIFI_DRIVER_FW_AP_PATH := "/system/etc/wifi/fw_tiwlan_ap.bin"
 WPA_SUPPL_APPROX_USE_RSSI := true
 
+BOARD_SOFTAP_DEVICE := wl1271
+PRODUCT_WIRELESS_TOOLS := true
+AP_CONFIG_DRIVER_WILINK := true
+WPA_SUPPL_APPROX_USE_RSSI := true
 
-BOARD_KERNEL_CMDLINE := console=ttyS2,115200n8 rw mem=244M@0x80C00000 init=/init ip=off brdrev=P3A_CDMA mtdparts=omap2-nand.0:640k@128k(mbm),384k@1408k(cdt),384k@3328k(lbl),384k@6272k(misc),3584k(boot),4608k(recovery),143744k(system),94848k(cache),268032k(userdata),2m(kpanic)
+BOARD_KERNEL_CMDLINE := console=ttyS2,115200n8 rw mem=244M@0x80C00000 init=/init ip=off vram=16M omapfb.vram=0:8M brdrev=P3A_CDMA mtdparts=omap2-nand.0:640k@128k(mbm),384k@1408k(cdt),384k@3328k(lbl),384k@6272k(misc),3584k(boot),4608k(recovery),143744k(system),94848k(cache),268032k(userdata),2m(kpanic)
 BOARD_KERNEL_BASE := 0x10000000
 
 BOARD_HAVE_BLUETOOTH := true
@@ -151,25 +135,27 @@ BOARD_HAVE_BLUETOOTH_BCM := true
 BOARD_EGL_CFG := device/motorola/sholes/egl.cfg
 
 BOARD_BOOTIMAGE_PARTITION_SIZE := 0x00380000
-BOARD_RECOVERYIMAGE_PARTITION_SIZE := 0x00480000 
-BOARD_SYSTEMIMAGE_PARTITION_SIZE := 0x08c60000   # limited so we enforce room to grow
+BOARD_RECOVERYIMAGE_PARTITION_SIZE := 0x00480000
+BOARD_SYSTEMIMAGE_PARTITION_SIZE := 0x08c60000 # limited so we enforce room to grow
 BOARD_USERDATAIMAGE_PARTITION_SIZE := 0x105c0000
 BOARD_FLASH_BLOCK_SIZE := 131072
 
-#TARGET_NO_RECOVERY := true # causes no rule to make otapackage
-#TARGET_OTA_NO_RECOVERY := true
-BOARD_HAS_SMALL_RECOVERY := true
+
 
 #TARGET_RECOVERY_UI_LIB := librecovery_ui_sholes librecovery_ui_generic
 
 #TARGET_RECOVERY_UPDATER_LIBS += librecovery_updater_generic
 
 USE_SHOLES_PROPERTY := true
+TARGET_SKIA_USE_MORE_MEMORY := false
+
 TARGET_USE_CUSTOM_LUN_FILE_PATH := "/sys/devices/platform/usb_mass_storage/lun0/file"
 
 #KERNEL_DEFCONFIG := cyanogen_sholes_defconfig
 
 TARGET_PREBUILT_KERNEL := device/motorola/sholes/kernel
-TARGET_PREBUILT_RECOVERY_KERNEL := device/motorola/sholes/recovery_kernel
+# TARGET_PREBUILT_RECOVERY_KERNEL := device/motorola/sholes/recovery_kernel
 
+#adb has root
+ADDITIONAL_DEFAULT_PROPERTIES += ro.secure=0
 
