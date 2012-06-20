@@ -20,13 +20,27 @@
 # definition file).
 #
 
+# WARNING: This line must come *before* including the proprietary
+# variant, so that it gets overwritten by the parent (which goes
+# against the traditional rules of inheritance).
+USE_CAMERA_STUB := false
+
+TARGET_PROVIDES_LIBAUDIO := true
 # Use a smaller subset of system fonts to keep image size lower
 SMALLER_FONT_FOOTPRINT := true
 
 # WARNING: This line must come *before* including the proprietary
 # variant, so that it gets overwritten by the parent (which goes
 # against the traditional rules of inheritance).
-USE_CAMERA_STUB := true
+
+#Camera Fixes
+
+BOARD_USES_CAMERASHIM := true
+BOARD_CAMERA_LIBRARIES := libcamera
+BOARD_CAMERA_MOTOROLA_COMPAT := true
+BOARD_USE_FROYO_LIBCAMERA := true
+
+#USE_CAMERA_STUB := true
 #BOARD_USE_FROYO_LIBCAMERA := true
 #BOARD_USES_TI_CAMERA_HAL := true
 
@@ -55,26 +69,27 @@ TARGET_GLOBAL_CPPFLAGS += -mtune=cortex-a8
 
 ARCH_ARM_HAVE_TLS_REGISTER := false #check this, apparently omap3430 has the register but kernel doesn't use it
 
-
-
 ##necessary?
 TARGET_PROVIDES_INIT_TARGET_RC := true
 TARGET_PROVIDES_INIT_RC := true
 
 # audio stuff
-TARGET_PROVIDES_LIBAUDIO := true
+TARGET_PROVIDES_LIBAUDIO := true 
 BOARD_USES_GENERIC_AUDIO := false  
+BOARD_USES_AUDIO_LEGACY := true
+
 #BOARD_USES_ALSA_AUDIO := true
 #BUILD_WITH_ALSA_UTILS := true
-BOARD_USES_AUDIO_LEGACY := true
 #BOARD_USES_TI_OMAP_MODEM_AUDIO := true
 #BUILD_SHOLES_AUDIO := false #needs lots more work 
 
 # HW Graphics (EGL fixes + webkit fix)
-USE_OPENGL_RENDERER := false
+USE_OPENGL_RENDERER := true
+DEFAULT_FB_NUM := 0
+BOARD_USES_OVERLAY := true
 BOARD_EGL_CFG := device/motorola/sholes/egl.cfg
 
-COMMON_GLOBAL_CFLAGS += -DMISSING_EGL_EXTERNAL_IMAGE -DMISSING_EGL_PIXEL_FORMAT_YV12 -DMISSING_GRALLOC_BUFFERS
+#COMMON_GLOBAL_CFLAGS += -DMISSING_EGL_EXTERNAL_IMAGE -DMISSING_EGL_PIXEL_FORMAT_YV12 -DMISSING_GRALLOC_BUFFERS -DEGL_ALWAYS_ASYNC
 BOARD_NO_RGBX_8888 := true
 
 
@@ -109,30 +124,33 @@ ENABLE_SENSORS_COMPAT := true
 
 # Wifi related defines
 BOARD_WLAN_DEVICE := wl1271
+BOARD_SOFTAP_DEVICE := wl1271
+BOARD_WPA_SUPPLICANT_PRIVATE_LIB := libCustomWifi
 WPA_SUPPLICANT_VERSION := VER_0_6_X
 BOARD_WPA_SUPPLICANT_DRIVER := CUSTOM
 WIFI_DRIVER_MODULE_PATH := "/system/lib/modules/tiwlan_drv.ko"
 WIFI_DRIVER_MODULE_NAME := tiwlan_drv
 WIFI_DRIVER_FW_STA_PATH := "/system/etc/wifi/fw_wlan1271.bin"
-WIFI_FIRMWARE_LOADER := wlan_loader
+WIFI_FIRMWARE_LOADER := "wlan_loader"
 PRODUCT_WIRELESS_TOOLS := true
-BOARD_SOFTAP_DEVICE := wl1271
 AP_CONFIG_DRIVER_WILINK := true
 WIFI_DRIVER_FW_AP_PATH := "/system/etc/wifi/fw_tiwlan_ap.bin"
 WPA_SUPPL_APPROX_USE_RSSI := true
+WPA_SUPPL_WITH_SIGNAL_POLL := true
+# CM9
+WIFI_AP_DRIVER_MODULE_PATH := "/system/lib/modules/tiap_drv.ko"
+WIFI_AP_DRIVER_MODULE_NAME := tiap_drv
+WIFI_AP_FIRMWARE_LOADER := wlan_ap_loader
+WIFI_AP_DRIVER_MODULE_ARG := ""
+BOARD_HOSTAPD_NO_ENTROPY := true
+BOARD_HOSTAPD_DRIVER := true
+BOARD_HOSTAPD_DRIVER_NAME := wilink
 
-BOARD_SOFTAP_DEVICE := wl1271
-PRODUCT_WIRELESS_TOOLS := true
-AP_CONFIG_DRIVER_WILINK := true
-WPA_SUPPL_APPROX_USE_RSSI := true
-
-BOARD_KERNEL_CMDLINE := console=ttyS2,115200n8 rw mem=244M@0x80C00000 init=/init ip=off vram=16M omapfb.vram=0:8M brdrev=P3A_CDMA mtdparts=omap2-nand.0:640k@128k(mbm),384k@1408k(cdt),384k@3328k(lbl),384k@6272k(misc),3584k(boot),4608k(recovery),143744k(system),94848k(cache),268032k(userdata),2m(kpanic)
+BOARD_KERNEL_CMDLINE := console=ttyS2,115200n8 rw mem=244M@0x80C00000 init=/init ip=off brdrev=P3A_CDMA mtdparts=omap2-nand.0:640k@128k(mbm),384k@1408k(cdt),384k@3328k(lbl),384k@6272k(misc),3584k(boot),4608k(recovery),143744k(system),94848k(cache),268032k(userdata),2m(kpanic)
 BOARD_KERNEL_BASE := 0x10000000
 
 BOARD_HAVE_BLUETOOTH := true
 BOARD_HAVE_BLUETOOTH_BCM := true
-
-BOARD_EGL_CFG := device/motorola/sholes/egl.cfg
 
 BOARD_BOOTIMAGE_PARTITION_SIZE := 0x00380000
 BOARD_RECOVERYIMAGE_PARTITION_SIZE := 0x00480000

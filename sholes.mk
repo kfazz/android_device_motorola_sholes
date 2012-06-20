@@ -110,12 +110,31 @@ PRODUCT_COPY_FILES += \
     device/motorola/sholes/sholes-keypad.idc:system/usr/idc/sholes-keypad.idc \
     device/motorola/sholes/cpcap-key.kcm:system/usr/keychars/cpcap-key.kcm
     
+
+# Audio
+#PRODUCT_COPY_FILES += \
+#    device/motorola/sholes/audio/libaudio.so:/system/lib/libaudio.so \
+#    device/motorola/sholes/audio/liba2dp.so:/system/lib/liba2dp.so
+
+# sysctl config
+PRODUCT_COPY_FILES += \
+    device/motorola/sholes/sysctl.conf:system/etc/sysctl.conf \
+    device/motorola/sholes/prebuilt/vendor/app/.holder:/system/vendor/app/.holder
+
+
+
 # ICS sound
 PRODUCT_PACKAGES += \
 hcitool hciattach hcidump \
-libaudioutils audio.a2dp.default  \
-libaudiohw_legacy audio.primary.sholes audio_policy.sholes
-#alsa.omap3 alsa.default acoustics.default audio.primary.omap3 audio_policy.omap3
+libaudioutils audio.a2dp.default audio_policy.omap3 \
+libaudiohw_legacy audio.primary.omap3
+     
+
+# HW Libs
+PRODUCT_PACKAGES += \
+    hwcomposer.default \
+    camera.sholes
+
  
 # ICS graphics
 PRODUCT_PACKAGES += libGLESv2 libEGL libGLESv1_CM

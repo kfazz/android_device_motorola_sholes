@@ -34,15 +34,14 @@ public:
 
         virtual ~AudioPolicyManager() {}
 
-        virtual AudioPolicyManagerBase::routing_strategy getStrategy(AudioSystem::stream_type stream);
-
 protected:
         // true is current platform implements a back microphone
         virtual bool hasBackMicrophone() const { return true; }
 #ifdef WITH_A2DP
-        // true is current platform supports duplication of notifications and ringtones over A2DP output
+        // true is current platform supports suplication of notifications and ringtones over A2DP output
         virtual bool a2dpUsedForSonification() const { return true; }
 #endif
 
 };
 };
+

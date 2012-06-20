@@ -99,7 +99,7 @@ on fs
     mount yaffs2 mtd@system /system ro remount
     mount yaffs2 mtd@userdata /data nosuid nodev
     mount yaffs2 mtd@cache /cache nosuid nodev
-    exec /system/bin/sh /system/bin/init_early_bind_mounts.sh
+ #   exec /system/bin/sh /system/bin/init_early_bind_mounts.sh
 
 on post-fs
     # once everything is setup, no need to modify /
@@ -165,8 +165,14 @@ on post-fs-data
     mkdir /data/app 0771 system system
     mkdir /data/property 0700 root root
 
-    # create dalvik-cache, so as to enforce our permissions
+  # create dalvik-cache and double-check the perms
     mkdir /data/dalvik-cache 0771 system system
+    chown system system /data/dalvik-cache
+    chmod 0771 /data/dalvik-cache
+
+    mkdir /cache/dalvik-cache 0771 system system
+    chown system system /cache/dalvik-cache
+    chmod 0771 /cache/dalvik-cache
 
     # create resource-cache and double-check the perms
     mkdir /data/resource-cache 0771 system system
@@ -174,7 +180,26 @@ on post-fs-data
     chmod 0771 /data/resource-cache
 
     # create the lost+found directories, so as to enforce our permissions
-    mkdir /data/lost+found 0770 root root
+    mkdir /data/lost+found 0770
+    mkdir /cache/lost+found 0770
+
+    # double check the perms, in case lost+found already exists, and set owner
+    chown root root /data/lost+found
+    chmod 0770 /data/lost+found
+    chown root root /cache/lost+found
+    chmod 0770 /cache/lost+found
+
+    # allow net_raw to have access to /dev/socket directory
+    chown root net_raw /dev/socket
+    chmod 0775 /dev/socket
+
+    # allow system to modify cpufreq control files
+    chown root system /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+    chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+    chown root system /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+    chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+    chown root system /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+    chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
 
     # create directory for DRM plug-ins
     mkdir /data/drm 0774 drm drm
@@ -184,6 +209,8 @@ on post-fs-data
     # won't work.
     # Set indication (checked by vold) that we have finished this action
     #setprop vold.post_fs_data_done 1
+
+
 
     chown system system /sys/class/android_usb/android0/f_mass_storage/lun/file
     chmod 0660 /sys/class/android_usb/android0/f_mass_storage/lun/file

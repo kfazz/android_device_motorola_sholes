@@ -106,19 +106,19 @@ on boot
     write /proc/sys/kernel/softlockup_panic 1
 
 # Load traffic shaping modules
-#    insmod /system/lib/modules/cfbcopyarea.ko
+
+##### try building as modules again
 #    insmod /system/lib/modules/cfbfillrect.ko
 #    insmod /system/lib/modules/cfbimgblt.ko
-
+#    insmod /system/lib/modules/cfbcopyarea.ko
+#    insmod /system/lib/modules/fb.ko
 #    insmod /system/lib/modules/omapdss.ko dsi_fps=1 dsi_perf=1 def_disp="sholes-panel" def_disp_name=panel-sholes
-
 #    insmod /system/lib/modules/panel-sholes.ko
-
 #    insmod /system/lib/modules/output.ko
-#    insmod /system/lib/modules/omapvout-bp.ko
 #    insmod /system/lib/modules/vout.ko
-
 #    insmod /system/lib/modules/omapfb.ko vram=0:8m
+###
+
 
     insmod /system/lib/modules/ifb.ko
     insmod /system/lib/modules/act_mirred.ko
@@ -182,7 +182,7 @@ service baseimage /system/bin/dspexec -v -T /system/lib/dsp/baseimage.dof
     disabled
 
 #sgx/rc.pvr start
-service pvrsrv /system/bin/pvrsrvinit
+service pvrsrv /system/bin/sgx/rc.pvr start
     class core
     user root
     oneshot
