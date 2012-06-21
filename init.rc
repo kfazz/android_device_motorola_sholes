@@ -17,6 +17,7 @@ loglevel 3
     export PATH /sbin:/vendor/bin:/system/sbin:/system/bin:/system/xbin
     export LD_LIBRARY_PATH /vendor/lib:/system/lib
     export ANDROID_BOOTLOGO 1
+    export ANDROID_CACHE /cache
     export ANDROID_ROOT /system
     export ANDROID_ASSETS /system/app
     export ANDROID_DATA /data
@@ -39,7 +40,7 @@ loglevel 3
 
     mkdir /system
     mkdir /data 0771 system system
-    mkdir /cache 0770 system cache
+    mkdir /cache 0771 system cache
     mkdir /config 0500 root root
 
     # Directory for putting things only root should see.
@@ -107,7 +108,7 @@ on post-fs
 
     # We chown/chmod /cache again so because mount is run as root + defaults
     chown system cache /cache
-    chmod 0770 /cache
+    chmod 0771 /cache
 
     # This may have been created by the recovery system with odd permissions
     chown system cache /cache/recovery
@@ -164,6 +165,7 @@ on post-fs-data
     mkdir /data/app-private 0771 system system
     mkdir /data/app 0771 system system
     mkdir /data/property 0700 root root
+    mkdir /data/radio 0770 radio radio
 
   # create dalvik-cache and double-check the perms
     mkdir /data/dalvik-cache 0771 system system
@@ -180,8 +182,8 @@ on post-fs-data
     chmod 0771 /data/resource-cache
 
     # create the lost+found directories, so as to enforce our permissions
-    mkdir /data/lost+found 0770
-    mkdir /cache/lost+found 0770
+    mkdir /data/lost+found 0770 root root
+    mkdir /cache/lost+found 0770 root root
 
     # double check the perms, in case lost+found already exists, and set owner
     chown root root /data/lost+found
@@ -295,6 +297,8 @@ on boot
 # Set this property so surfaceflinger is not started by system_init
     setprop system_init.startsurfaceflinger 0
 
+# Run sysinit
+    exec /system/bin/sysinit
     class_start core
     class_start main
 
@@ -442,7 +446,7 @@ service surfaceflinger /system/bin/surfaceflinger
 
 service zygote /system/bin/app_process -Xzygote /system/bin --zygote --start-system-server
     class main
-    socket zygote stream 666
+    socket zygote stream 666 root system
     onrestart write /sys/android_power/request_state wake
     onrestart write /sys/power/state on
     onrestart restart media

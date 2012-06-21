@@ -187,6 +187,7 @@ PRODUCT_PACKAGES += \
     PhaseBeam \
     tiap_cu \
     tiap_loader \
+    libaudiopolicy \
     libfnc
 
 #    systembinsh
