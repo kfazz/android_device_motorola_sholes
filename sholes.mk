@@ -227,15 +227,15 @@ PRODUCT_COPY_FILES += \
 #    | sed -r 's/^\/?(.*\/)([^/ ]+)$$/\1\2:system\/lib\/modules\/\2/' \
 #    | tr '\n' ' ')
 
-ifeq ($(TARGET_PREBUILT_KERNEL),)
-LOCAL_KERNEL := device/motorola/sholes/kernel
-else
-LOCAL_KERNEL := $(TARGET_PREBUILT_KERNEL)
-endif
+#ifeq ($(TARGET_PREBUILT_KERNEL),)
+#LOCAL_KERNEL := device/motorola/sholes/kernel
+#else
+#LOCAL_KERNEL := $(TARGET_PREBUILT_KERNEL)
+#endif
 
 # copy kernel
-PRODUCT_COPY_FILES += \
-    $(LOCAL_KERNEL):kernel
+#PRODUCT_COPY_FILES += \
+#    $(LOCAL_KERNEL):kernel
 
 $(call inherit-product-if-exists, vendor/motorola/sholes/sholes-vendor.mk)
 
