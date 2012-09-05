@@ -1,3 +1,5 @@
+#import init.sholes.usb.rc
+
 on early-init
     export EXTERNAL_STORAGE /mnt/sdcard
     mkdir /mnt/sdcard 0000 system system
@@ -13,16 +15,16 @@ on early-init
     # mount /pds as r/w
     # We chown/chmod /pds again so because mount is run as root + defaults
     symlink /pds /config
-    mount yaffs2 mtd@pds /pds nosuid nodev
-    chown system system /pds
-    chmod 0775 /pds
-    mkdir /pds/comm_drv
-    chown radio radio /pds/comm_drv
-    chmod 0770 /pds/comm_drv
-    mkdir /pds/public
-    chown system shell /pds/public
-    chmod 0775 /pds/public
-
+    
+# usb permissions
+chmod 0660 /dev/mtp
+chmod 0660 /dev/ttyGS0
+chmod 0660 /dev/usb_device_mode
+chmod 0660 /proc/mtpctl
+chown mot_usb mot_usb /dev/mtp
+chown mot_usb mot_usb /dev/ttyGS0
+chown mot_usb mot_usb /dev/usb_device_mode
+chown mot_usb mot_usb /proc/mtpctl
     
 on post-fs
     start baseimage
@@ -42,8 +44,18 @@ on post-fs-data
     chown dhcp dhcp /data/misc/dhcp
     setprop vold.post_fs_data_done 1
 
+    # copy hostapd configuration
+    copy /system/etc/wifi/softap/hostapd.conf /data/misc/wifi/hostapd.conf
 
-#on property:vold.post_fs_data_done=1
+    # copy dnsmasq configuration
+    copy /system/etc/wifi/dnsmasq.conf /data/misc/wifi/dns.conf
+    chown wifi wifi /data/misc/wifi/dns.conf
+    chmod 666 /data/misc/wifi/dns.conf
+    exec /system/bin/sh /system/bin/init_early_bind_mounts.sh
+
+on property:vold.post_fs_data_done=1
+     start adbd
+
 #    start mdm_panicd
 #    start pppd-ril 
 #tessstinggggg...
@@ -51,7 +63,7 @@ on post-fs-data
 on boot
 
 
-    mount yaffs2 mtd@pds /config ro no-checkpoint-write
+    #mount yaffs2 mtd@pds /config no-checkpoint-write
 
     # bluetooth power up/down interface
     chown bluetooth bluetooth /sys/class/rfkill/rfkill0/type
@@ -75,32 +87,54 @@ on boot
     chown media graphics /dev/video1
     chown media graphics /dev/video2
 
-# Permissions for lighting
-   chown system system /sys/class/leds/lcd-backlight/als
-   chown system system /sys/class/leds/lcd-backlight/pwm_mode
-   chown system system /sys/class/leds/red/blink
-   chmod 0660 /sys/class/leds/torch-flash/camera_strobe
-   chmod 0660 /sys/class/leds/torch-flash/flash_light
-   chown system system /sys/class/leds/torch-flash/camera_strobe
-   chown system system /sys/class/leds/torch-flash/flash_light
-
-# flashlight
-   chown system camera /sys/class/leds/spotlight/brightness
-   chmod 0660 /sys/class/leds/spotlight/brightness
+ # Change the ownership of led files.
+    chown system system /sys/class/leds/lcd-backlight/als
+    chown system system /sys/class/leds/lcd-backlight/pwm_mode
+    chown system system /sys/class/leds/lcd-backlight/brightness
+    chown system system /sys/class/leds/keyboard-backlight/brightness
+    chown system system /sys/class/leds/button-backlight/brightness
+    chown system system /sys/class/leds/red/blink
+    chown system system /sys/class/leds/red/brightness
+    chown system system /sys/class/leds/green/brightness
+    chown system system /sys/class/leds/blue/brightness
+    chown system system /sys/class/leds/usb/brightness
+    chown system system /sys/class/leds/torch-flash/camera_strobe
+    chown media system /sys/class/leds/torch-flash/flash_light
+    chown media system /sys/class/leds/spotlight/brightness
+    chown media system /sys/class/leds/af-led/brightness
+    chmod 0660 /sys/class/leds/lcd-backlight/brightness
+    chmod 0660 /sys/class/leds/keyboard-backlight/brightness
+    chmod 0660 /sys/class/leds/button-backlight/brightness
+    chmod 0660 /sys/class/leds/red/blink
+    chmod 0660 /sys/class/leds/red/brightness
+    chmod 0660 /sys/class/leds/green/brightness
+    chmod 0660 /sys/class/leds/blue/brightness
+    chmod 0660 /sys/class/leds/usb/brightness
+    chmod 0666 /sys/class/leds/torch-flash/camera_strobe
+    chmod 0666 /sys/class/leds/torch-flash/flash_light
+    chmod 0666 /sys/class/leds/spotlight/brightness
 
 # Permissions for 3D
     chmod 0666 /dev/pvrsrvkm
     chown system graphics /dev/pvrsrvkm
 
+
 # Power Management Settings
     write /sys/devices/platform/ohci.0/usb2/2-3/power/level auto
     write /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq 250000
-    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq 800000
-    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor ondemand
-    write /sys/devices/system/cpu/cpu0/cpufreq/ondemand/up_threshold 93
-    write /sys/devices/system/cpu/cpu0/cpufreq/ondemand/sampling_rate 30000
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq 1000000
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor conservative
+    #write /sys/devices/system/cpu/cpu0/cpufreq/ondemand/up_threshold 93
+    #write /sys/devices/system/cpu/cpu0/cpufreq/ondemand/sampling_rate 30000
     # Wakelock debug
     write /sys/module/wakelock/parameters/debug_mask 7
+
+# Page Merging
+#    write /sys/kernel/mm/ksm/sleep_millisecs 1000 
+chown system system /sys/kernel/mm/ksm/run
+chmod 0666 /sys/kernel/mm/ksm/run
+
+    write /sys/kernel/mm/ksm/run 0
 
 # Enable panic on softlockup
     write /proc/sys/kernel/softlockup_panic 1
@@ -119,7 +153,8 @@ on boot
 #    insmod /system/lib/modules/omapfb.ko vram=0:8m
 ###
 
-
+    insmod /system/lib/modules/xt_quota2.ko
+    insmod /system/lib/modules/xt_owner2.ko
     insmod /system/lib/modules/ifb.ko
     insmod /system/lib/modules/act_mirred.ko
     insmod /system/lib/modules/sch_ingress.ko
@@ -128,6 +163,11 @@ on boot
     insmod /system/lib/modules/sch_htb.ko
     insmod /system/lib/modules/em_u32.ko
 
+#service usbd /system/bin/usbd
+#    class core
+#    user root
+#    group mot_usb system
+#    socket usbd stream 0666 mot_usb mot_usb
 
 # Ecompass daemon
 service akmd2 /system/bin/akmd2
@@ -142,12 +182,26 @@ service wlan_loader /system/bin/wlan_loader \
     disabled
     oneshot
 
+service hostap_netd /system/bin/hostap -d /data/misc/wifi/hostapd.conf
+    class core
+    group wifi system inet net_admin
+    socket tiap0 dgram 660 wifi wifi
+    disabled
+    oneshot
+
+service wlan_ap_loader /system/bin/tiap_loader \
+    -f /system/etc/wifi/fw_tiwlan_ap.bin -i /system/etc/wifi/softap/tiwlan_ap.ini \
+    -e /config/wifi/nvs_map.bin
+    class core
+    disabled
+    oneshot
+
 service wpa_supplicant /system/bin/wpa_supplicant \
     -Dtiwlan0 -itiwlan0 -c/data/misc/wifi/wpa_supplicant.conf
-#   we will start as root and wpa_supplicant will switch to user wifi
-#   after setting up the capabilities required for WEXT
-#   user wifi
-#   group wifi inet keystore
+# we will start as root and wpa_supplicant will switch to user wifi
+# after setting up the capabilities required for WEXT
+# user wifi
+# group wifi inet keystore
     socket wpa_tiwlan0 dgram 660 wifi wifi
     class core
     disabled
@@ -158,9 +212,16 @@ service dhcpcd_tiwlan0 /system/bin/dhcpcd -ABKL
     disabled
     oneshot
 
-service battd /system/bin/battd
-    socket battdsock stream 0660 root mount
+service iprenew_tiwlan0 /system/bin/dhcpcd -n
     class core
+    disabled
+    oneshot
+
+service battd /system/bin/battd
+    socket battdsock stream 0660 mot_accy mot_accy
+    class core
+    user root
+    group mot_accy mot_pwric
     oneshot
 
 service pppd-ril /system/bin/pppd-ril /dev/ttyUSB0 call pppd-ril.options plugin /system/lib/libpppd_plugin-ril.so
@@ -179,16 +240,13 @@ service hciattach /system/bin/hciattach \
 service baseimage /system/bin/dspexec -v -T /system/lib/dsp/baseimage.dof
     class core
     oneshot
-    disabled
+#    disabled
 
-#sgx/rc.pvr start
 service pvrsrv /system/bin/sgx/rc.pvr start
     class core
     user root
     oneshot
     disabled
-
-
 
 # bugreport is triggered by the KEY_LEFTSHIFT and KEY_MENU keycodes
 service bugreport /system/bin/dumpstate -d -v -o /sdcard/bugreports/bugreport
@@ -224,4 +282,11 @@ service savebpver /system/bin/SaveBPVer
 
 on property:dev.bootcomplete=1
    start savebpver
+
+service fmradio /system/bin/fmradioserver
+    class main
+    user system
+    group bluetooth net_bt_admin net_raw net_admin misc
+    disabled
+
 

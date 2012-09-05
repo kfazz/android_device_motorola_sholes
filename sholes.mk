@@ -32,8 +32,12 @@ PRODUCT_COPY_FILES += \
     device/motorola/sholes/init.sholes.rc:root/init.sholes.rc \
     device/motorola/sholes/ueventd.sholes.rc:root/ueventd.sholes.rc \
     device/motorola/sholes/sysctl.conf:system/etc/sysctl.conf \
+    device/motorola/sholes/audio_policy.conf:system/etc/audio_policy.conf \
+    device/motorola/sholes/media_codecs.xml:system/etc/media_codecs.xml \
     device/motorola/sholes/init.rc:root/init.rc \
     device/motorola/sholes/init_early_bind_mounts.sh:system/bin/init_early_bind_mounts.sh
+
+#    device/motorola/sholes/init.sholes.usb.rc:root/init.sholes.usb.rc \
 
 ## (2) Also get non-open-source CDMA-specific aspects if available
 $(call inherit-product-if-exists, vendor/motorola/sholes/sholes-vendor.mk)
@@ -62,16 +66,17 @@ PRODUCT_PROPERTY_OVERRIDES += \
     	keyguard.no_require_sim=true \
    	ro.com.android.dataroaming=true \
     	ro.com.android.dateformat=MM-dd-yyyy \
-    	ro.config.ringtone=Ring_Synth_04.ogg \
-    	ro.config.notification_sound=pixiedust.ogg \
-        dalvik.vm.heapstartsize=5m \
+    	ro.config.ringtone=CyanTone.ogg \
+    	ro.config.notification_sound=CyanPing.ogg \
         dalvik.vm.heapsize=48m \
 	debug.sf.nobootanimation=1 \
         hwui.render_dirty_regions=false \
-        ro.telephony.ril.v3=signalstrength,skipbrokendatacall,facilitylock,icccardstatus
+        ro.telephony.ril.v3=signalstrength,skipbrokendatacall,facilitylock,icccardstatus \
+	
 #,datacall
 
 
+#        dalvik.vm.heapstartsize=5m \
 #        debug.db.uid=32767
 #	ro.telephony.ril.v3=icccardstatus,datacall,signalstrength,facilitylock
 #        debug.sf.hw=1
@@ -81,23 +86,24 @@ PRODUCT_PROPERTY_OVERRIDES += \
 DEVICE_PACKAGE_OVERLAYS += device/motorola/sholes/overlay
 
 PRODUCT_COPY_FILES += \
-    frameworks/base/data/etc/handheld_core_hardware.xml:system/etc/permissions/handheld_core_hardware.xml \
-    frameworks/base/data/etc/android.hardware.camera.flash-autofocus.xml:system/etc/permissions/android.hardware.camera.flash-autofocus.xml \
-    frameworks/base/data/etc/android.hardware.telephony.cdma.xml:system/etc/permissions/android.hardware.telephony.cdma.xml \
-    frameworks/base/data/etc/android.hardware.location.gps.xml:system/etc/permissions/android.hardware.location.gps.xml \
-    frameworks/base/data/etc/android.hardware.wifi.xml:system/etc/permissions/android.hardware.wifi.xml \
-    frameworks/base/data/etc/android.hardware.sensor.accelerometer.xml:system/etc/permissions/android.hardware.sensor.accelerometer.xml \
-    frameworks/base/data/etc/android.hardware.sensor.compass.xml:system/etc/permissions/android.hardware.sensor.compass.xml \
-    frameworks/base/data/etc/android.hardware.sensor.proximity.xml:system/etc/permissions/android.hardware.sensor.proximity.xml \
-    frameworks/base/data/etc/android.hardware.sensor.light.xml:system/etc/permissions/android.hardware.sensor.light.xml \
-    frameworks/base/data/etc/android.hardware.touchscreen.multitouch.distinct.xml:system/etc/permissions/android.hardware.touchscreen.multitouch.distinct.xml \
-    frameworks/base/data/etc/android.software.sip.voip.xml:system/etc/permissions/android.software.sip.voip.xml \
+    frameworks/native/data/etc/handheld_core_hardware.xml:system/etc/permissions/handheld_core_hardware.xml \
+    frameworks/native/data/etc/android.hardware.camera.flash-autofocus.xml:system/etc/permissions/android.hardware.camera.flash-autofocus.xml \
+    frameworks/native/data/etc/android.hardware.telephony.cdma.xml:system/etc/permissions/android.hardware.telephony.cdma.xml \
+    frameworks/native/data/etc/android.hardware.location.gps.xml:system/etc/permissions/android.hardware.location.gps.xml \
+    frameworks/native/data/etc/android.hardware.wifi.xml:system/etc/permissions/android.hardware.wifi.xml \
+    frameworks/native/data/etc/android.hardware.sensor.accelerometer.xml:system/etc/permissions/android.hardware.sensor.accelerometer.xml \
+    frameworks/native/data/etc/android.hardware.sensor.compass.xml:system/etc/permissions/android.hardware.sensor.compass.xml \
+    frameworks/native/data/etc/android.hardware.sensor.proximity.xml:system/etc/permissions/android.hardware.sensor.proximity.xml \
+    frameworks/native/data/etc/android.hardware.sensor.light.xml:system/etc/permissions/android.hardware.sensor.light.xml \
+    frameworks/native/data/etc/android.hardware.touchscreen.multitouch.distinct.xml:system/etc/permissions/android.hardware.touchscreen.multitouch.distinct.xml \
+    frameworks/native/data/etc/android.software.sip.voip.xml:system/etc/permissions/android.software.sip.voip.xml \
 
 
 
 # media config xml file
 PRODUCT_COPY_FILES += \
-    device/motorola/sholes/media_profiles.xml:system/etc/media_profiles.xml
+    device/motorola/sholes/media_profiles.xml:system/etc/media_profiles.xml 
+
 
 #key layouts
 PRODUCT_COPY_FILES += \
@@ -111,28 +117,27 @@ PRODUCT_COPY_FILES += \
     device/motorola/sholes/cpcap-key.kcm:system/usr/keychars/cpcap-key.kcm
     
 
-# Audio
-#PRODUCT_COPY_FILES += \
-#    device/motorola/sholes/audio/libaudio.so:/system/lib/libaudio.so \
-#    device/motorola/sholes/audio/liba2dp.so:/system/lib/liba2dp.so
-
 # sysctl config
 PRODUCT_COPY_FILES += \
     device/motorola/sholes/sysctl.conf:system/etc/sysctl.conf \
     device/motorola/sholes/prebuilt/vendor/app/.holder:/system/vendor/app/.holder
 
+#dnsmasq
+PRODUCT_COPY_FILES += \
+    device/motorola/sholes/dnsmasq.conf:/system/etc/wifi/dnsmasq.conf
+
+#old jpeg encoder(prebuilt), fix for null pictures
+PRODUCT_COPY_FILES += \
+    device/motorola/sholes/prebuilt/lib/libOMX.TI.JPEG.Encoder.so:/system/etc/lib/libOMX.TI.JPEG.Encoder.so
 
 
 # ICS sound
 PRODUCT_PACKAGES += \
-hcitool hciattach hcidump \
+hcitool hciattach hcidump hciconfig \
 libaudioutils audio.a2dp.default audio_policy.omap3 \
 libaudiohw_legacy audio.primary.omap3
      
-
-# HW Libs
 PRODUCT_PACKAGES += \
-    hwcomposer.default \
     camera.sholes
 
  
@@ -140,30 +145,22 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += libGLESv2 libEGL libGLESv1_CM
 
 # TO FIX for ICS
-PRODUCT_PACKAGES += gralloc.default hwcomposer.default
+PRODUCT_PACKAGES += hwcomposer.default
 
 # ICS Camera
 PRODUCT_PACKAGES += Camera overlay.omap3 camera.sholes libcamera libui
 
-
+# Wifi packages
+PRODUCT_PACKAGES += iwmulticall hostap wlan_loader wlan_cu wpa_supplicant
+PRODUCT_PACKAGES += libhostapdcli libCustomWifi libwpa_client libtiOsLib
+PRODUCT_PACKAGES += tiwlan.ini dhcpcd.conf wpa_supplicant.conf hostapd.conf
+PRODUCT_PACKAGES += tiap_loader tiap_cu ndc
 
 PRODUCT_PACKAGES += \
     librs_jni \
-    tiwlan.ini \
     dspexec \
     libbridge \
     overlay.omap3 \
-    wlan_cu \
-    libtiOsLib \
-    libtiOsLibAP \
-    wlan_loader \
-    tiap_loader \
-    libCustomWifi \
-    wpa_supplicant.conf \
-    dhcpcd.conf \
-    hostap \
-    hostapd.conf \
-    libhostapdcli \
     libOMX.TI.AAC.encode \
     libOMX.TI.AMR.encode \
     libOMX.TI.WBAMR.encode \
@@ -173,25 +170,28 @@ PRODUCT_PACKAGES += \
     libOMX.TI.Video.Decoder \
     libOMX.TI.Video.encoder \
     libVendor_ti_omx \
-    gps.sholes \
-    sensors.sholes \
-    lights.sholes \
     hwcomposer.default \
     VoiceDialer \
     drmserver \
     libdrmframework \
     libdrmframework_jni \
-    UsbMassStorage \
     Torch \
     liba2dp \
-    PhaseBeam \
-    tiap_cu \
-    tiap_loader \
-    libaudiopolicy \
-    libfnc
+    sensors.sholes \
+    lights.sholes \
+    MotoFM
 
+#     LegacyCamera \ 
+#    PhaseBeam \
+#    WAPPushManager \
+#   VideoEditor
+#     gps.sholes \ 
+#   UsbMassStorage \
+#    libaudiopolicy \
+#    libfnc \
+#    usbd \
+#    Usb
 #    systembinsh
-
  #   liba2dp \
  #   audio.primary.sholes \
  #   audio_policy.sholes 
@@ -202,24 +202,30 @@ PRODUCT_PACKAGES += \
 #    libfwdlockengine \
 #    libWnnEngDic \
 #    libwnndict \
-#    WAPPushManager
 #    OpenWnn \
-#   VideoEditor \
+# \
+
+
 # we have enough storage space to hold precise GC data
 PRODUCT_TAGS += dalvik.gc.type-precise
 
 # sholes uses high-density artwork where available
-PRODUCT_LOCALES += hdpi
+#PRODUCT_LOCALES += hdpi
 
 PRODUCT_COPY_FILES += \
-    device/motorola/sholes/vold.fstab:system/etc/vold.fstab
+    device/motorola/sholes/vold.fstab:/system/etc/vold.fstab
+
+
+#    vendor/cm/prebuilt/common/etc/apns-conf.xml:system/etc/apns-conf.xml
+
+#    device/motorola/sholes/vold.fstab:system/etc/vold.fstab
 #    device/motorola/sholes/apns-conf.xml:system/etc/apns-conf.xml
 
 # copy all kernel modules under the "modules" directory to system/lib/modules
-PRODUCT_COPY_FILES += $(shell \
-    find device/motorola/sholes/modules -name '*.ko' \
-    | sed -r 's/^\/?(.*\/)([^/ ]+)$$/\1\2:system\/lib\/modules\/\2/' \
-    | tr '\n' ' ')
+#PRODUCT_COPY_FILES += $(shell \
+#    find device/motorola/sholes/modules -name '*.ko' \
+#    | sed -r 's/^\/?(.*\/)([^/ ]+)$$/\1\2:system\/lib\/modules\/\2/' \
+#    | tr '\n' ' ')
 
 ifeq ($(TARGET_PREBUILT_KERNEL),)
 LOCAL_KERNEL := device/motorola/sholes/kernel
@@ -239,18 +245,18 @@ $(call inherit-product-if-exists, vendor/motorola/sholes/sholes-vendor.mk)
 PRODUCT_AAPT_CONFIG := normal hdpi
 
 # Put en_US first in the list, so make it default.
-PRODUCT_LOCALES := en_US hdpi
-
-# Get some sounds
-$(call inherit-product-if-exists, frameworks/base/data/sounds/OriginalAudio.mk)
+PRODUCT_LOCALES := en_US
 
 # Get the TTS language packs
 #$(call inherit-product-if-exists, external/svox/pico/lang/all_pico_languages.mk)
 
 # Get everything else from the parent package
-$(call inherit-product-if-exists, build/target/product/generic_no_telephony.mk)
+$(call inherit-product-if-exists, build/target/product/telephony.mk)
+$(call inherit-product-if-exists, build/target/product/full_trimmed.mk)
+#$(call inherit-product-if-exists, build/target/product/mini.mk)
+
 
 PRODUCT_DEFAULT_LANGUAGE := en_US
 
-PRODUCT_NAME := generic_sholes
+PRODUCT_NAME := mini_sholes
 PRODUCT_DEVICE := sholes

@@ -10,7 +10,12 @@ ro.sf.lcd_density=240
 # 4 => CDMA / EVDO.
 ro.telephony.default_network=4
 
+#droid has a wrigley 3g ril (Lies, GSM only!)
+# ro.telephony.ril_class=MotoWrigley3GRIL
+
 wifi.interface = tiwlan0
+wifi.ap.interface = tiap0
+
 # Time between scans in seconds. Keep it high to minimize battery drain.
 # This only affects the case in which there are remembered access points,
 # but none are in range.
@@ -30,10 +35,11 @@ ro.opengles.version = 131072
 #ro.config.disable_hw_accel=true
 
 # Tell UsbService that we're using Usb.apk
-ro.usb.use_custom_service=1
+#ro.usb.use_custom_service=1
 
 # use 1% battery steps
 ro.product.use_charge_counter=1
+persist.sys.one_percent_batt=1
 
 # Use TI hotspot code
 wifi.hotspot.ti=1
@@ -44,6 +50,46 @@ persist.sys.purgeable_assets=1
 # enable 16bit transparency by default
 persist.sys.use_16bpp_alpha=1
 
+#enable adb by default
+persist.service.adb.enable=1
+
+#enable usb without having to go through settings
+persist.sys.usb.config=mass_storage,adb
+
+#camera stuff (props bulled from defy 720p patch)
+#ro.media.camcorder.720p=3gp,m4v,30,10000000,aac,96000,44100,2
+#ro.media.camcorder.d1NTSC=3gp,h264,30,6000000,aac,96000,44100,2
+#ro.media.camcorder.vga=3gp,h264,24,4000000,aac,96000,44100,2
+#ro.media.camcorder.cif=3gp,h264,24,1500000,aac,96000,44100,2
+#ro.media.camcorder.qvga=3gp,h264,15,500000,aac,32000,16000,2
+#ro.media.camcorder.mms=3gp,h264,15,128000,amrnb,12200,8000,1
+#ro.media.camcorder.mmsres=qvga
+#ro.media.enc.aud.fileformat=amr
+#ro.media.enc.aud.codec=amrnb
+#ro.media.enc.aud.bps=12200
+#ro.media.enc.aud.ch=1
+#ro.media.enc.aud.hz=8000
+ro.media.capture.flash=led
+ro.media.capture.flashMinV=3300000
+ro.media.capture.flashIntensity=41
+ro.media.capture.torchIntensity=25
+ro.media.capture.maxres=5m
+ro.media.capture.useDFR=1
+ro.media.capture.noSensorLSC=1
+ro.media.enc.hprof.vid.width=720
+ro.media.enc.hprof.vid.height=480
+ro.media.capture.shuttertone=1
+ro.media.sensor.orient=90
+ro.media.capture.panorama=1
+ro.media.panorama.defres=2592x1936
+ro.media.panorama.frameres=848x480
+ro.media.capture.slow.fps=60
+ro.media.capture.fast.fps=4
+ro.camcorder.VideoModes=false
+ro.camera.DynamicFocus=false
+ro.product.camid=MB525 
+media.stagefright.enable-record=false
+ro.media.capture.classification=classD   
 
 #ril options found in source
 #ro.telephonyril.v3=icccardstatus,signalstrength,facilitylock,skipbrokendatacall
