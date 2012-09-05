@@ -127,8 +127,9 @@ PRODUCT_COPY_FILES += \
     device/motorola/sholes/dnsmasq.conf:/system/etc/wifi/dnsmasq.conf
 
 #old jpeg encoder(prebuilt), fix for null pictures
-PRODUCT_COPY_FILES += \
-    device/motorola/sholes/prebuilt/lib/libOMX.TI.JPEG.Encoder.so:/system/etc/lib/libOMX.TI.JPEG.Encoder.so
+#still needed?
+#PRODUCT_COPY_FILES += \
+#    device/motorola/sholes/prebuilt/lib/libOMX.TI.JPEG.Encoder.so:/system/etc/lib/libOMX.TI.JPEG.Encoder.so
 
 
 # ICS sound
