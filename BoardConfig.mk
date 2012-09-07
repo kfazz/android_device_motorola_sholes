@@ -173,17 +173,17 @@ TARGET_KERNEL_SOURCE := kernel/motorola/sholes
 TARGET_KERNEL_CUSTOM_TOOLCHAIN := android-toolchain-eabi
  # arm-eabi-4.4.3
 
-#TARGET_MODULES_SOURCE := "system/wlan/ti/wilink_6_1/platforms/os/linux/"
-#TARGET_MODULES_AP_SOURCE := "system/wlan/ti/WiLink_AP/platforms/os/linux/"
+TARGET_MODULES_SOURCE := "system/wlan/ti/wilink_6_1/platforms/os/linux/"
+TARGET_MODULES_AP_SOURCE := "system/wlan/ti/WiLink_AP/platforms/os/linux/"
 
-#WIFI_MODULES:
-#	make -C $(TARGET_MODULES_SOURCE) HOST_PLATFORM=zoom2 KERNEL_DIR=$(KERNEL_OUT) ARCH=$(TARGET_ARCH) $(ARM_CROSS_COMPILE)
-#	mv system/wlan/ti/wilink_6_1/platforms/os/linux/tiwlan_drv.ko $(KERNEL_MODULES_OUT)
-#	make -C $(TARGET_MODULES_AP_SOURCE) HOST_PLATFORM=zoom2 KERNEL_DIR=$(KERNEL_OUT) ARCH=$(TARGET_ARCH) $(ARM_CROSS_COMPILE)
-#	arm-eabi-strip --strip-unneeded system/wlan/ti/WiLink_AP/platforms/os/linux/tiap_drv.ko
-#	mv system/wlan/ti/wilink_6_1/platforms/os/linux/tiwlan_drv.ko $(KERNEL_MODULES_OUT)
-#
-# TARGET_KERNEL_MODULES := WIFI_MODULES
+WIFI_MODULES:
+	make -C $(TARGET_MODULES_SOURCE) HOST_PLATFORM=zoom2 KERNEL_DIR=$(KERNEL_OUT) ARCH=$(TARGET_ARCH) CROSS_COMPILE=$(ANDROID_BUILD_TOP)/prebuilt/linux-x86/toolchain/$(TARGET_KERNEL_CUSTOM_TOOLCHAIN)/bin/arm-eabi-
+	mv system/wlan/ti/wilink_6_1/platforms/os/linux/tiwlan_drv.ko $(KERNEL_MODULES_OUT)
+	make -C $(TARGET_MODULES_AP_SOURCE) HOST_PLATFORM=zoom2 KERNEL_DIR=$(KERNEL_OUT) ARCH=$(TARGET_ARCH) CROSS_COMPILE=$(ANDROID_BUILD_TOP)/prebuilt/linux-x86/toolchain/$(TARGET_KERNEL_CUSTOM_TOOLCHAIN)/bin/arm-eabi-
+	arm-eabi-strip --strip-unneeded system/wlan/ti/WiLink_AP/platforms/os/linux/tiap_drv.ko
+	mv system/wlan/ti/WiLink_AP/platforms/os/linux/tiap_drv.ko $(KERNEL_MODULES_OUT)
+
+TARGET_KERNEL_MODULES := WIFI_MODULES
 
 
 
